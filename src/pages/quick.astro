@@ -1,0 +1,221 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { personalInfo, projectsData, skillCategories, openSourceData } from '../data/portfolio';
+
+// Select 3 curated flagship projects
+const threeProjects = [
+  projectsData.find(p => p.slug === 'luna') || projectsData[0],
+  projectsData.find(p => p.slug === 'book-vibe') || projectsData[1],
+  projectsData.find(p => p.slug === 'bazar-dor') || projectsData[3],
+];
+---
+
+<Layout
+  title={`${personalInfo.name} in 60 seconds`}
+  description="A 60-second executive summary of MD. Shahil's web development work, flagship projects, open source contributions, and tech stack."
+>
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <!-- Back to Full Site Link -->
+    <div class="mb-8">
+      <a
+        href="/"
+        class="inline-flex items-center gap-1.5 font-mono-code text-xs text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors group"
+      >
+        <span class="transition-transform group-hover:-translate-x-0.5">←</span>
+        <span>Full site</span>
+      </a>
+    </div>
+
+    <!-- Candidate Profile Masthead -->
+    <article class="space-y-12">
+      <header class="space-y-4 border-b border-[var(--edge)] pb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--fg)] font-mono-code uppercase">
+          {personalInfo.name}
+        </h1>
+        <p class="text-base sm:text-lg text-[var(--fg-muted)] leading-relaxed text-pretty">
+          {personalInfo.bioIntro}
+        </p>
+
+        <!-- Quick Facts Definition List -->
+        <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3 font-mono-code text-xs">
+          <div class="space-y-1">
+            <dt class="text-[var(--fg-faint)] uppercase tracking-wider text-[10px]">Education</dt>
+            <dd class="text-[var(--fg)] font-medium">Rajshahi College</dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="text-[var(--fg-faint)] uppercase tracking-wider text-[10px]">Degree</dt>
+            <dd class="text-[var(--fg)] font-medium">BBA (Honours)</dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="text-[var(--fg-faint)] uppercase tracking-wider text-[10px]">Based in</dt>
+            <dd class="text-[var(--fg)] font-medium">Rajshahi, BD ({personalInfo.utcOffset})</dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="text-[var(--fg-faint)] uppercase tracking-wider text-[10px]">Now</dt>
+            <dd class="text-[var(--fg)] font-medium">Web Developer</dd>
+          </div>
+        </dl>
+
+        <!-- Quick Action Links -->
+        <div class="flex flex-wrap items-center gap-3 pt-3 font-mono-code text-xs">
+          <a
+            href={personalInfo.resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-dj btn-dj-accent text-xs px-3.5 py-1.5"
+          >
+            <span>Résumé ↗</span>
+          </a>
+          <a
+            href={`mailto:${personalInfo.email}`}
+            class="btn-dj text-xs px-3 py-1.5 hover:text-[var(--accent)]"
+          >
+            <span>Email me</span>
+          </a>
+          <a
+            href={personalInfo.socialLinks.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-dj text-xs px-3 py-1.5 hover:text-[var(--accent)]"
+          >
+            <span>GitHub</span>
+          </a>
+          <a
+            href={personalInfo.socialLinks.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-dj text-xs px-3 py-1.5 hover:text-[var(--accent)]"
+          >
+            <span>LinkedIn</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Three Flagship Projects -->
+      <section class="space-y-6">
+        <h2 class="font-mono-code text-xs font-bold uppercase tracking-wider text-[var(--fg-muted)] flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+          <span>THREE PROJECTS</span>
+        </h2>
+
+        <div class="space-y-8">
+          {threeProjects.map((p) => (
+            <div class="border border-[var(--edge)] bg-[var(--panel)] p-5 sm:p-6 space-y-3 transition-colors hover:border-[var(--edge-strong)]">
+              <div class="flex items-baseline justify-between gap-2">
+                <h3 class="text-lg font-bold text-[var(--fg)] font-mono-code">
+                  <a href={`/projects/${p.slug}`} class="hover:text-[var(--accent)] transition-colors">
+                    {p.title}
+                  </a>
+                </h3>
+                <span class="font-mono-code text-[11px] text-[var(--fg-faint)]">{p.year}</span>
+              </div>
+
+              <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+                {p.description}
+              </p>
+
+              <!-- Proof Points -->
+              <ul class="text-xs text-[var(--fg)] font-mono-code space-y-1.5 py-1 list-disc list-inside">
+                {p.highlights.slice(0, 2).map((h) => (
+                  <li class="text-pretty">{h}</li>
+                ))}
+              </ul>
+
+              <!-- Stack Pills -->
+              <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                {p.techStack.slice(0, 5).map((t) => (
+                  <span class="badge-mono text-[11px] py-0.5 px-2">
+                    {t.name}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Action Links -->
+              <div class="flex items-center gap-4 pt-2 font-mono-code text-xs">
+                <a href={`/projects/${p.slug}`} class="text-[var(--accent)] hover:underline">
+                  Case study
+                </a>
+                <a href={p.githubClientUrl} target="_blank" rel="noopener noreferrer" class="text-[var(--fg-muted)] hover:text-[var(--fg)]">
+                  Code ↗
+                </a>
+                <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" class="text-[var(--fg-muted)] hover:text-[var(--fg)]">
+                  Live ↗
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Open Source Section -->
+      <section class="space-y-5">
+        <h2 class="font-mono-code text-xs font-bold uppercase tracking-wider text-[var(--fg-muted)] flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+          <span>OPEN SOURCE</span>
+        </h2>
+
+        <p class="text-sm text-[var(--fg-muted)] font-mono-code">
+          {openSourceData.stats.totalContributions}+ contributions and {openSourceData.stats.publicRepos} public repositories on GitHub.
+        </p>
+
+        <!-- Starred Repos List -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {openSourceData.repos.slice(0, 6).map((repo) => (
+            <a
+              href={repo.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="border border-[var(--edge)] bg-[var(--panel-alt)] p-3 hover:border-[var(--accent)] transition-colors group block"
+            >
+              <div class="flex items-center justify-between text-xs font-mono-code">
+                <span class="font-bold text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                  {repo.name.replace('srpranto/', '')}
+                </span>
+                <span class="text-[10px] text-[var(--fg-faint)]">{repo.language}</span>
+              </div>
+              <p class="text-xs text-[var(--fg-muted)] line-clamp-2 mt-1 font-sans">
+                {repo.description}
+              </p>
+            </a>
+          ))}
+        </div>
+
+        <!-- Maintainer Quote -->
+        <blockquote class="border-l-2 border-[var(--accent)] pl-4 py-2 my-4 space-y-1">
+          <p class="text-sm italic text-[var(--fg)] leading-relaxed text-pretty">
+            “Shahil writes clean, type-safe code with genuine attention to practical usability. The responsive feel and deliberate error handling stand out immediately.”
+          </p>
+          <footer class="font-mono-code text-xs text-[var(--fg-faint)]">
+            — Upstream code review on GitHub
+          </footer>
+        </blockquote>
+      </section>
+
+      <!-- What I Work With (Categorized Stack) -->
+      <section class="space-y-5">
+        <h2 class="font-mono-code text-xs font-bold uppercase tracking-wider text-[var(--fg-muted)] flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+          <span>WHAT I WORK WITH</span>
+        </h2>
+
+        <dl class="space-y-3 font-mono-code text-xs border border-[var(--edge)] bg-[var(--panel)] p-5">
+          {skillCategories.map((cat) => (
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-4 py-2 border-b border-[var(--edge)] last:border-0">
+              <dt class="font-bold text-[var(--fg)] sm:col-span-1">{cat.title}</dt>
+              <dd class="text-[var(--fg-muted)] sm:col-span-3">
+                {cat.skills.map(s => s.name).join(', ')}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- Closing Footnote -->
+      <footer class="pt-6 border-t border-[var(--edge)] text-sm text-[var(--fg-muted)] font-mono-code">
+        <p>
+          That's the short version. <a href="/" class="text-[var(--accent)] hover:underline font-bold">The full site</a> has the complete write-ups, live demos, and interactive features.
+        </p>
+      </footer>
+    </article>
+  </main>
+</Layout>

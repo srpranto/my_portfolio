@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Projects from '../components/Projects.astro';
+import OpenSource from '../components/OpenSource.astro';
+import ExperienceEducation from '../components/ExperienceEducation.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Layout>
+  <main>
+    <!-- Section 00: Hero (Designation, Photo, Resume Buttons, Socials, Clock, Accordion) -->
+    <Hero />
+
+    <!-- Section 01: About Me (Programming Journey, Work Enjoyed, Hobbies, Crontab Terminal) -->
+    <About />
+
+    <!-- Section 02: Skills (Categorized Graphical Layout, Badges, Tech Matrix) -->
+    <Skills />
+
+    <!-- Section 03: Projects (Selected Works, Cards, View More / Details) -->
+    <Projects />
+
+    <!-- Section 04: Open Source & Upstream Contributions -->
+    <OpenSource />
+
+    <!-- Section 05: Experience & Educational Qualification -->
+    <ExperienceEducation />
+
+    <!-- Section 06: Contact Information & Interactive Message Form -->
+    <Contact />
+  </main>
+</Layout>

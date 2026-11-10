@@ -1,0 +1,480 @@
+---
+// HangingLamp.astro - Exact devjhawar.com hanging pendant lamp theme toggle with physics pull cord
+---
+
+<div class="lamp relative w-9 h-9 flex-none ml-1.5" id="lamp" title="Toggle theme (Pull lamp cord)">
+  <button id="theme-toggle" type="button" aria-label="Toggle dark/light theme" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"></button>
+  
+  <!-- Interactive Grip Area -->
+  <span class="grip" aria-hidden="true"></span>
+
+  <!-- Hanging Pendant Lamp SVG Rig -->
+  <svg class="rig" viewBox="-54 0 108 480" width="108" height="480" aria-hidden="true">
+    <defs>
+      <!-- Warm Ambient Glow for Light Mode -->
+      <radialGradient id="lamp-glow">
+        <stop offset="0" stop-color="#ffc45c" stop-opacity="0.65"></stop>
+        <stop offset="0.35" stop-color="#ffc45c" stop-opacity="0.25"></stop>
+        <stop offset="1" stop-color="#ffc45c" stop-opacity="0"></stop>
+      </radialGradient>
+
+      <!-- Brushed Metal Gradients for Lamp Shade -->
+      <linearGradient id="lamp-metal" x1="0" x2="1">
+        <stop offset="0" class="m0"></stop>
+        <stop offset="0.28" class="m1"></stop>
+        <stop offset="0.62" class="m2"></stop>
+        <stop offset="1" class="m3"></stop>
+      </linearGradient>
+
+      <!-- Warm Interior Shade Mouth -->
+      <radialGradient id="lamp-in" cy="0.15" r="0.95">
+        <stop offset="0" stop-color="#fffbea"></stop>
+        <stop offset="0.45" stop-color="#ffd27a"></stop>
+        <stop offset="1" stop-color="#e8892a"></stop>
+      </radialGradient>
+
+      <!-- Lit Bulb (Light Mode) -->
+      <radialGradient id="lamp-bulb" cx="0.45" cy="0.4" r="0.7">
+        <stop offset="0" stop-color="#ffffff"></stop>
+        <stop offset="0.5" stop-color="#ffeaa8"></stop>
+        <stop offset="1" stop-color="#ffb13d"></stop>
+      </radialGradient>
+
+      <!-- Dark Glass Bulb (Dark Mode) -->
+      <radialGradient id="lamp-glass" cx="0.38" cy="0.32" r="0.75">
+        <stop offset="0" stop-color="#9aa0a9"></stop>
+        <stop offset="1" stop-color="#2c3036"></stop>
+      </radialGradient>
+
+      <!-- Brass Pull Bead -->
+      <radialGradient id="lamp-bead" cx="0.35" cy="0.3" r="0.75">
+        <stop offset="0" stop-color="#ffe6b0"></stop>
+        <stop offset="0.5" stop-color="#e39a35"></stop>
+        <stop offset="1" stop-color="#8f5410"></stop>
+      </radialGradient>
+    </defs>
+
+    <!-- Top Ceiling Suspension Wire -->
+    <path class="wire" d="M0 0V13"></path>
+
+    <!-- Lamp Head (Shade, Socket, Bulb, Glow) -->
+    <g class="head">
+      <circle class="glow" cx="0" cy="35" r="46" fill="url(#lamp-glow)"></circle>
+      <rect x="-2.6" y="11.5" width="5.2" height="6" rx="1.2" fill="url(#lamp-metal)"></rect>
+      <path d="M0 16C-7 16-10.2 21-12 32h24C10.2 21 7 16 0 16Z" fill="url(#lamp-metal)"></path>
+      <path class="sheen" d="M-3.8 18.3C-6.6 19.8-8.3 23.5-9.5 29"></path>
+      <ellipse class="mouth" cx="0" cy="32" rx="12" ry="2.4"></ellipse>
+      <circle class="bulb" cx="0" cy="33.4" r="3.7"></circle>
+      <ellipse class="spec" cx="-1.3" cy="32.2" rx="1.1" ry="0.75"></ellipse>
+    </g>
+
+    <!-- Hanging Pull Cord -->
+    <path class="cord" id="lamp-cord-path" d="M0 37V67"></path>
+
+    <!-- Bottom Brass Knob & Bead -->
+    <g class="knob" id="lamp-knob-g" transform="translate(0 67)">
+      <rect class="crimp" x="-1.1" y="-1.5" width="2.2" height="2.6" rx="0.6"></rect>
+      <circle class="bead" cx="0" cy="4.4" r="4.2"></circle>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .lamp {
+    --slot: 2.25rem;
+    width: var(--slot);
+    height: var(--slot);
+    view-transition-name: lamp;
+  }
+
+  .rig {
+    top: calc((var(--slot) - 3.75rem) / 2);
+    pointer-events: none;
+    will-change: transform;
+    width: 108px;
+    max-width: none;
+    height: 480px;
+    margin-left: -54px;
+    position: absolute;
+    left: 50%;
+    overflow: visible;
+    z-index: 40;
+  }
+
+  .wire {
+    fill: none;
+    stroke-linecap: round;
+    stroke: var(--fg);
+    stroke-width: 1.2px;
+    opacity: 0.6;
+  }
+
+  .cord {
+    fill: none;
+    stroke-linecap: round;
+    --brass: #b57722;
+    stroke: var(--brass);
+    stroke-width: 1.6px;
+    transition: stroke 0.2s ease;
+  }
+
+  .cord.taut {
+    stroke: var(--accent);
+  }
+
+  .bead {
+    fill: url(#lamp-bead);
+  }
+
+  .crimp {
+    fill: url(#lamp-metal);
+  }
+
+  /* Metallic Gradients Light Mode */
+  .m0 { stop-color: #16181c; }
+  .m1 { stop-color: #6c727c; }
+  .m2 { stop-color: #2b2f36; }
+  .m3 { stop-color: #0c0d10; }
+
+  /* Metallic Gradients Dark Mode */
+  :root[data-theme="dark"] .m0 { stop-color: #c4cad3; }
+  :root[data-theme="dark"] .m1 { stop-color: #ffffff; }
+  :root[data-theme="dark"] .m2 { stop-color: #e8ebef; }
+  :root[data-theme="dark"] .m3 { stop-color: #9aa1ab; }
+
+  .sheen {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 0.8px;
+    stroke-linecap: round;
+    opacity: 0.35;
+  }
+
+  .mouth {
+    fill: url(#lamp-in);
+  }
+
+  .bulb {
+    fill: url(#lamp-bulb);
+  }
+
+  .spec {
+    fill: #ffffff;
+    opacity: 0.9;
+  }
+
+  .glow {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+  }
+
+  /* Dark mode bulb turns off */
+  :root[data-theme="dark"] .mouth {
+    fill: #121418;
+  }
+
+  :root[data-theme="dark"] .bulb {
+    fill: url(#lamp-glass);
+  }
+
+  :root[data-theme="dark"] .spec {
+    opacity: 0.5;
+  }
+
+  :root[data-theme="dark"] .glow {
+    opacity: 0;
+  }
+
+  :root[data-theme="dark"] .cord {
+    --brass: #d39a4c;
+  }
+
+  .knob .bead {
+    transform-box: fill-box;
+    transform-origin: 50% 0;
+    transition: transform 0.15s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* Interactive cord grip zone */
+  .grip {
+    z-index: 50;
+    top: calc((var(--slot) - 3.75rem) / 2 + 71px - 22px);
+    cursor: grab;
+    touch-action: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    left: calc(50% - 22px);
+  }
+
+  .grip:hover ~ .rig .knob .bead,
+  .lamp.pulling .knob .bead {
+    transform: scale(1.25);
+  }
+
+  .lamp.pulling .grip {
+    cursor: grabbing;
+  }
+
+  .flicker .bulb,
+  .flicker .mouth,
+  .flicker .glow {
+    animation: 0.45s step-end lamp-flicker;
+  }
+
+  @keyframes lamp-flicker {
+    0%, 50% { opacity: 0.2; }
+    25%, 75% { opacity: 1; }
+  }
+</style>
+
+<script>
+  function setupHangingLamp() {
+    const lamp = document.getElementById('lamp');
+    const grip = lamp?.querySelector('.grip');
+    const themeBtn = document.getElementById('theme-toggle');
+    const cordPath = document.getElementById('lamp-cord-path');
+    const knobG = document.getElementById('lamp-knob-g');
+
+    if (!lamp || !grip || !cordPath || !knobG) return;
+
+    let isPulling = false;
+    let startY = 0;
+    let currentY = 0;
+    const restY = 67;
+    const maxPull = 45;
+    const triggerThreshold = 22;
+
+    function updateCord(dy: number) {
+      if (!cordPath || !knobG) return;
+      const knobY = restY + dy;
+      cordPath.setAttribute('d', `M0 37V${knobY}`);
+      knobG.setAttribute('transform', `translate(0 ${knobY})`);
+      if (dy > 8) {
+        cordPath.classList.add('taut');
+      } else {
+        cordPath.classList.remove('taut');
+      }
+    }
+
+    let activeVT: any = null;
+
+    for (let evt of ['wheel', 'touchmove', 'keydown']) {
+      window.addEventListener(evt, () => {
+        try { activeVT?.skipTransition(); } catch (e) {}
+      }, { passive: true });
+    }
+
+    function toggleTheme() {
+      if (!lamp) return;
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') === 'dark' || root.classList.contains('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+
+      const isTurningOn = newTheme === 'light';
+
+      // Play physical switch click audio immediately (distinct ON vs OFF)
+      if (typeof window.__playLampClick === 'function') {
+        window.__playLampClick(isTurningOn);
+      }
+
+      const applyTheme = () => {
+        if (newTheme === 'dark') {
+          root.setAttribute('data-theme', 'dark');
+          root.classList.add('dark');
+        } else {
+          root.removeAttribute('data-theme');
+          root.classList.remove('dark');
+        }
+        localStorage.setItem('dj-theme', newTheme);
+        window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: newTheme } }));
+      };
+
+      const hasViewTransition = typeof (document as any).startViewTransition === 'function';
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (hasViewTransition && !prefersReduced) {
+        if (activeVT) {
+          try { activeVT.skipTransition(); } catch (e) {}
+        }
+
+        const rect = lamp.getBoundingClientRect();
+        const originX = rect.left + rect.width / 2;
+        const originY = rect.top + 32;
+
+        root.dataset.vt = newTheme;
+        const transition = (document as any).startViewTransition(applyTheme);
+        activeVT = transition;
+
+        transition.ready.then(() => {
+          const radius = Math.hypot(
+            Math.max(originX, window.innerWidth - originX),
+            Math.max(originY, window.innerHeight - originY)
+          );
+          const circleReveal = [
+            `circle(0px at ${originX}px ${originY}px)`,
+            `circle(${radius}px at ${originX}px ${originY}px)`
+          ];
+
+          const anim = root.animate({
+            clipPath: newTheme === 'light' ? circleReveal : [...circleReveal].reverse()
+          }, {
+            duration: 380,
+            easing: 'cubic-bezier(0.5, 0, 0.2, 1)',
+            fill: 'forwards',
+            pseudoElement: `::view-transition-${newTheme === 'light' ? 'new' : 'old'}(root)`
+          });
+
+          transition.finished.finally(() => {
+            anim.cancel();
+            delete root.dataset.vt;
+            activeVT = null;
+          });
+        }).catch(() => {
+          delete root.dataset.vt;
+          activeVT = null;
+        });
+      } else {
+        applyTheme();
+      }
+    }
+
+    function animateQuickTug() {
+      // Tactile quick pull & spring snap on click
+      let dy = 0;
+      let targetDy = 22;
+      let phase = 'down';
+      let velocity = 8;
+      const spring = 0.32;
+      const damping = 0.75;
+
+      function stepTug() {
+        if (phase === 'down') {
+          dy += velocity;
+          if (dy >= targetDy) {
+            dy = targetDy;
+            phase = 'spring';
+            velocity = -12;
+          }
+          updateCord(dy);
+          requestAnimationFrame(stepTug);
+        } else {
+          const force = -spring * dy;
+          velocity = (velocity + force) * damping;
+          dy += velocity;
+          updateCord(Math.max(-8, dy));
+
+          if (Math.abs(dy) > 0.4 || Math.abs(velocity) > 0.4) {
+            requestAnimationFrame(stepTug);
+          } else {
+            updateCord(0);
+          }
+        }
+      }
+      requestAnimationFrame(stepTug);
+    }
+
+    function releaseCord(shouldToggle: boolean) {
+      if (shouldToggle) {
+        toggleTheme();
+      }
+
+      // Spring snap-back animation
+      let dy = currentY;
+      let velocity = -15;
+      const spring = 0.28;
+      const damping = 0.72;
+
+      function animateSpring() {
+        const force = -spring * dy;
+        velocity = (velocity + force) * damping;
+        dy += velocity;
+
+        updateCord(Math.max(-10, dy));
+
+        if (Math.abs(dy) > 0.5 || Math.abs(velocity) > 0.5) {
+          requestAnimationFrame(animateSpring);
+        } else {
+          updateCord(0);
+          lamp?.classList.remove('pulling');
+          isPulling = false;
+        }
+      }
+
+      animateSpring();
+    }
+
+    // Direct click or tap on lamp container or themeBtn
+    lamp.addEventListener('click', (e) => {
+      // Don't duplicate if coming from pointer drag release
+      if (isPulling) return;
+      e.stopPropagation();
+      animateQuickTug();
+      toggleTheme();
+    });
+
+    themeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      animateQuickTug();
+      toggleTheme();
+    });
+
+    let pointerDownTime = 0;
+    let pointerDownY = 0;
+
+    // Pointer drag & click on grip
+    grip.addEventListener('pointerdown', (e) => {
+      isPulling = true;
+      pointerDownTime = performance.now();
+      pointerDownY = (e as PointerEvent).clientY;
+      startY = (e as PointerEvent).clientY;
+      currentY = 0;
+      lamp.classList.add('pulling');
+      try { grip.setPointerCapture((e as PointerEvent).pointerId); } catch(err) {}
+    });
+
+    grip.addEventListener('pointermove', (e) => {
+      if (!isPulling) return;
+      const delta = (e as PointerEvent).clientY - startY;
+      currentY = Math.min(maxPull, Math.max(0, delta));
+      updateCord(currentY);
+    });
+
+    grip.addEventListener('pointerup', (e) => {
+      if (!isPulling) return;
+      try { grip.releasePointerCapture((e as PointerEvent).pointerId); } catch(err) {}
+      
+      const elapsed = performance.now() - pointerDownTime;
+      const moved = Math.abs((e as PointerEvent).clientY - pointerDownY);
+
+      // If quick tap/click (< 300ms and minimal movement) or pulled past threshold (>= 18px)
+      if (elapsed < 320 && moved < 8) {
+        isPulling = false;
+        lamp.classList.remove('pulling');
+        animateQuickTug();
+        toggleTheme();
+      } else {
+        const pulled = currentY >= triggerThreshold;
+        releaseCord(pulled);
+      }
+    });
+
+    grip.addEventListener('pointercancel', () => {
+      if (!isPulling) return;
+      releaseCord(false);
+    });
+
+    // Expose global toggleTheme for keyboard shortcut 'T' and Command Palette
+    window.__toggleTheme = () => {
+      animateQuickTug();
+      toggleTheme();
+    };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupHangingLamp);
+  } else {
+    setupHangingLamp();
+  }
+</script>

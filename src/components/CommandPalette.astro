@@ -1,0 +1,237 @@
+---
+import { projectsData, personalInfo } from '../data/portfolio';
+---
+
+<div id="cmd-palette-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-200 flex items-start justify-center pt-20 px-4">
+  <div id="cmd-palette-box" class="w-full max-w-xl bg-[var(--panel)] border border-[var(--edge)] shadow-2xl overflow-hidden rounded-xs transform scale-95 transition-transform duration-200">
+    <!-- Header / Input -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--edge)] bg-[var(--panel-elevated)]">
+      <svg class="w-4 h-4 text-[var(--fg-muted)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        type="text"
+        id="cmd-palette-input"
+        placeholder="Type a command, project, or section... (ESC to exit)"
+        class="w-full bg-transparent text-[var(--fg)] placeholder-[var(--fg-muted)] text-sm font-mono-code focus:outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span class="text-xs font-mono-code text-[var(--fg-muted)] px-1.5 py-0.5 border border-[var(--edge)] rounded-xs">ESC</span>
+    </div>
+
+    <!-- Items list -->
+    <div id="cmd-palette-list" class="max-h-80 overflow-y-auto p-2 space-y-1 text-sm font-mono-code">
+      <!-- Section jumps -->
+      <div class="px-2 py-1 text-[11px] font-semibold tracking-wider text-[var(--fg-muted)] uppercase">Navigation</div>
+      <a href="/#hero" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">01</span> Overview</span>
+        <span class="text-xs text-[var(--fg-muted)]">#hero</span>
+      </a>
+      <a href="/#about" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">02</span> About</span>
+        <span class="text-xs text-[var(--fg-muted)]">#about</span>
+      </a>
+      <a href="/#skills" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">03</span> Skills & Stack</span>
+        <span class="text-xs text-[var(--fg-muted)]">#skills</span>
+      </a>
+      <a href="/#projects" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">04</span> Selected Projects</span>
+        <span class="text-xs text-[var(--fg-muted)]">#projects</span>
+      </a>
+      <a href="/#open-source" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">05</span> Open Source Activity</span>
+        <span class="text-xs text-[var(--fg-muted)]">#open-source</span>
+      </a>
+      <a href="/#experience" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">06</span> Experience & Education</span>
+        <span class="text-xs text-[var(--fg-muted)]">#experience</span>
+      </a>
+      <a href="/#contact" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">07</span> Contact</span>
+        <span class="text-xs text-[var(--fg-muted)]">#contact</span>
+      </a>
+
+      <!-- Projects -->
+      <div class="px-2 pt-3 pb-1 text-[11px] font-semibold tracking-wider text-[var(--fg-muted)] uppercase">Project Deep Dives</div>
+      {projectsData.map((project) => (
+        <a href={`/projects/${project.slug}`} class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+          <span class="flex items-center gap-2"><span class="text-[var(--fg-muted)] font-mono text-xs">→</span> {project.title} <span class="text-[var(--fg-muted)] font-normal text-xs truncate max-w-[240px]">— {project.tagline}</span></span>
+          <span class="text-[11px] text-[var(--accent)] border border-[var(--accent-border)] px-1.5 py-0.5 rounded-xs shrink-0">{project.status}</span>
+        </a>
+      ))}
+
+      <!-- Actions -->
+      <div class="px-2 pt-3 pb-1 text-[11px] font-semibold tracking-wider text-[var(--fg-muted)] uppercase">Quick Actions</div>
+      <a href={personalInfo.resumeUrl} download class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">PDF</span> Download Résumé</span>
+        <span class="text-xs text-[var(--fg-muted)]">Direct File</span>
+      </a>
+      <button id="cmd-toggle-theme" type="button" class="w-full text-left cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">THM</span> Toggle Theme (Light / Dark)</span>
+        <span class="text-xs text-[var(--fg-muted)]">Key 'T'</span>
+      </button>
+      <button id="cmd-toggle-sound" type="button" class="w-full text-left cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">SND</span> Toggle Sound Effects</span>
+        <span class="text-xs text-[var(--fg-muted)]">Key 'M'</span>
+      </button>
+      <a href={`mailto:${personalInfo.email}`} class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">MSG</span> Email Shahil</span>
+        <span class="text-xs text-[var(--fg-muted)]">{personalInfo.email}</span>
+      </a>
+      <a href={personalInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" class="cmd-item flex items-center justify-between px-3 py-2 rounded-xs text-[var(--fg)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors">
+        <span class="flex items-center gap-2.5"><span class="text-[var(--fg-muted)] font-mono text-xs w-5">CHAT</span> WhatsApp Direct Message</span>
+        <span class="text-xs text-[var(--fg-muted)]">+8801303723701</span>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-4 py-2 border-t border-[var(--edge)] bg-[var(--panel-alt)] flex items-center justify-between text-[11px] font-mono-code text-[var(--fg-muted)]">
+      <span>Navigation: <kbd class="px-1 border border-[var(--edge)]">Ctrl</kbd> + <kbd class="px-1 border border-[var(--edge)]">K</kbd></span>
+      <span>Press <kbd class="px-1 border border-[var(--edge)]">ESC</kbd> to close</span>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  const backdrop = document.getElementById('cmd-palette-backdrop');
+  const box = document.getElementById('cmd-palette-box');
+  const input = document.getElementById('cmd-palette-input');
+  const cmdItems = Array.from(document.querySelectorAll('.cmd-item'));
+  let selectedIndex = 0;
+
+  function getVisibleItems() {
+    return cmdItems.filter(item => item.style.display !== 'none');
+  }
+
+  function updateActiveHighlight() {
+    const visible = getVisibleItems();
+    visible.forEach((item, idx) => {
+      if (idx === selectedIndex) {
+        item.classList.add('bg-[var(--accent)]', 'text-white', 'font-semibold');
+        item.classList.remove('text-[var(--fg)]');
+      } else {
+        item.classList.remove('bg-[var(--accent)]', 'text-white', 'font-semibold');
+        item.classList.add('text-[var(--fg)]');
+      }
+    });
+  }
+
+  function openPalette() {
+    backdrop.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      backdrop.classList.remove('opacity-0');
+      box.classList.remove('scale-95');
+      box.classList.add('scale-100');
+      input.value = '';
+      filterItems('');
+      selectedIndex = 0;
+      updateActiveHighlight();
+      input.focus();
+    });
+  }
+
+  function closePalette() {
+    backdrop.classList.add('opacity-0');
+    box.classList.remove('scale-100');
+    box.classList.add('scale-95');
+    setTimeout(() => {
+      backdrop.classList.add('hidden');
+    }, 200);
+  }
+
+  function filterItems(query) {
+    const q = query.toLowerCase().trim();
+    cmdItems.forEach((item) => {
+      const text = item.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    selectedIndex = 0;
+    updateActiveHighlight();
+  }
+
+  window.__openCommandPalette = openPalette;
+  window.__closeCommandPalette = closePalette;
+
+  input?.addEventListener('input', (e) => {
+    filterItems(e.target.value);
+  });
+
+  input?.addEventListener('keydown', (e) => {
+    const visible = getVisibleItems();
+    if (!visible.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % visible.length;
+      updateActiveHighlight();
+      visible[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + visible.length) % visible.length;
+      updateActiveHighlight();
+      visible[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const activeEl = visible[selectedIndex];
+      if (activeEl) {
+        if (activeEl.tagName === 'A' && activeEl.getAttribute('href')) {
+          const targetHref = activeEl.getAttribute('href');
+          closePalette();
+          window.location.href = targetHref;
+        } else {
+          activeEl.click();
+        }
+      }
+    }
+  });
+
+  // Close on clicking backdrop
+  backdrop?.addEventListener('click', (e) => {
+    if (e.target === backdrop) {
+      closePalette();
+    }
+  });
+
+  // Global keybindings
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (backdrop?.classList.contains('hidden')) {
+        openPalette();
+      } else {
+        closePalette();
+      }
+    } else if (e.key === 'Escape' && !backdrop?.classList.contains('hidden')) {
+      closePalette();
+    } else if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      if (e.key.toLowerCase() === 't') {
+        window.__toggleTheme && window.__toggleTheme();
+      } else if (e.key.toLowerCase() === 'm') {
+        window.__toggleSound && window.__toggleSound();
+      }
+    }
+  });
+
+  // Command palette internal actions
+  document.getElementById('cmd-toggle-theme')?.addEventListener('click', () => {
+    window.__toggleTheme && window.__toggleTheme();
+    closePalette();
+  });
+
+  document.getElementById('cmd-toggle-sound')?.addEventListener('click', () => {
+    window.__toggleSound && window.__toggleSound();
+    closePalette();
+  });
+
+  cmdItems.forEach(item => {
+    item.addEventListener('click', () => {
+      closePalette();
+    });
+  });
+</script>

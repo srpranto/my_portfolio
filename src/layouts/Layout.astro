@@ -1,0 +1,93 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import SoundManager from '../components/SoundManager.astro';
+import { personalInfo } from '../data/portfolio';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = `${personalInfo.name} — ${personalInfo.designation} | ${personalInfo.roleHeadline}`,
+  description = personalInfo.bioIntro,
+  image = personalInfo.profileImage,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content={personalInfo.name} />
+    <meta name="keywords" content="MD. Shahil, Web Developer, React, Next.js, TypeScript, Tailwind CSS, Frontend Developer, Rajshahi, Bangladesh, Portfolio" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+
+    <!-- Early script to prevent theme/accent flash -->
+    <script is:inline>
+      (function() {
+        try {
+          const root = document.documentElement;
+          const savedTheme = localStorage.getItem('dj-theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+          } else {
+            root.classList.remove('dark');
+            root.removeAttribute('data-theme');
+          }
+
+          const savedAccent = localStorage.getItem('accent') || localStorage.getItem('dj-accent');
+          if (savedAccent && savedAccent !== 'default' && savedAccent !== 'blue') {
+            root.setAttribute('data-accent', savedAccent);
+          } else {
+            root.removeAttribute('data-accent');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="selection:bg-[var(--accent)] selection:text-white">
+    <!-- Sound Effect Synthesizer -->
+    <SoundManager />
+
+    <!-- Quick Search Command Palette Modal (Ctrl + K) -->
+    <CommandPalette />
+
+    <!-- Sticky Navigation Bar -->
+    <Navbar />
+
+    <!-- Main Content Slot -->
+    <slot />
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>

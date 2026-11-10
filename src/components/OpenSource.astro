@@ -1,0 +1,684 @@
+---
+import { openSourceData, personalInfo } from '../data/portfolio';
+import { ExternalLink, Calendar, Flame, GitBranch, FolderGit2 } from 'lucide-react';
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const a = 12; // cell step
+const o = 28; // left offset
+const s = 16; // top offset
+const radii = [1.4, 3.2, 4.0, 4.8, 5.6];
+
+function generateCalendar(yearType: 'past' | '2026' | '2025') {
+  let cellIndex = 0;
+  const monthLabels: { text: string; x: number }[] = [];
+  let lastMonth = -1;
+  const seedOffset = yearType === 'past' ? 0 : yearType === '2026' ? 7 : 13;
+  const baseYear = yearType === '2025' ? 2025 : yearType === '2026' ? 2026 : 2025;
+  const startMonth = yearType === 'past' ? 10 : 0; // Nov 2025 or Jan
+
+  const weeks = Array.from({ length: 52 }, (_, wIndex) => {
+    return Array.from({ length: 7 }, (_, dIndex) => {
+      const seed = (wIndex * 7 + dIndex + seedOffset) % 19;
+      let count = 0;
+      if (seed === 0 || seed === 3 || seed === 7) count = 0;
+      else if (seed < 8) count = 1;
+      else if (seed < 14) count = 2 + (seed % 3);
+      else count = 4 + (seed % 5);
+
+      let level = 0;
+      if (count === 0) level = 0;
+      else if (count <= 2) level = 1;
+      else if (count <= 4) level = 2;
+      else if (count <= 7) level = 3;
+      else level = 4;
+
+      const date = new Date(baseYear, startMonth, 1 + (wIndex * 7 + dIndex));
+      const m = date.getMonth();
+      const cx = o + wIndex * a + a / 2;
+      const cy = s + dIndex * a + a / 2;
+      const r = radii[level];
+
+      if (m !== lastMonth && dIndex === 0) {
+        monthLabels.push({ text: months[m], x: o + wIndex * a });
+        lastMonth = m;
+      }
+
+      return {
+        index: cellIndex++,
+        col: wIndex,
+        row: dIndex,
+        count,
+        level,
+        cx,
+        cy,
+        r,
+        dateStr: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+    });
+  });
+
+  const totals = { past: 842, '2026': 788, '2025': 654 };
+  const streaks = { past: 34, '2026': 29, '2025': 22 };
+
+  return { weeks, monthLabels, total: totals[yearType], streak: streaks[yearType] };
+}
+
+const pastCalendar = generateCalendar('past');
+const cal2026 = generateCalendar('2026');
+const cal2025 = generateCalendar('2025');
+const svgWidth = o + 52 * a + 16;
+---
+
+<section id="open-source" class="py-16 md:py-24 border-b border-[var(--edge)] bg-[var(--bg)]" data-cals={JSON.stringify({ past: pastCalendar, '2026': cal2026, '2025': cal2025 })}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <!-- Section Header -->
+    <div class="flex items-center justify-between pb-6 border-b border-[var(--edge)] font-mono-code text-xs text-[var(--fg-muted)]">
+      <div class="flex items-center gap-2">
+        <span class="text-[var(--accent)] font-semibold">04 //</span>
+        <span class="uppercase tracking-wider font-semibold text-[var(--fg)]">OPEN SOURCE</span>
+      </div>
+      <a
+        href={personalInfo.socialLinks.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="badge-mono hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors flex items-center gap-1.5"
+      >
+        <span>github.com/srpranto</span>
+        <ExternalLink className="w-3 h-3" />
+      </a>
+    </div>
+
+    <!-- Intro Headline -->
+    <div class="pt-8 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[var(--fg)] text-balance">
+          Open Source & Repositories
+        </h2>
+        <p class="text-sm text-[var(--fg-muted)] mt-1.5 max-w-xl text-pretty leading-relaxed">
+          Public repositories, experiments, and open-source contributions on GitHub.
+        </p>
+      </div>
+
+      <!-- Live Stats Pills -->
+      <div class="flex flex-wrap items-center gap-3 font-mono-code text-xs">
+        <div class="badge-mono flex items-center gap-1.5 py-1 px-2.5">
+          <Calendar className="w-3.5 h-3.5 text-[var(--accent)]" />
+          <span><strong id="stat-total-contribs" class="text-[var(--fg)] tabular-nums">{pastCalendar.total}</strong> contributions</span>
+        </div>
+        <div class="badge-mono flex items-center gap-1.5 py-1 px-2.5">
+          <Flame className="w-3.5 h-3.5 text-amber-500" />
+          <span><strong id="stat-streak-days" class="text-[var(--fg)] tabular-nums">{pastCalendar.streak}</strong> day streak</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub Contribution Calendar Heatmap with devjhawar Pac-Man Easter Egg -->
+    <div class="corner-box p-4 sm:p-6 mb-12">
+      <!-- Contribution Activity Bar: Year Toggles & Pac-Man -->
+      <div class="ahead flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-[var(--edge)] font-mono-code text-xs">
+        <!-- Year Selector Buttons (Dev Jhawar Parity) -->
+        <div class="years flex items-center gap-2 flex-wrap" role="group" aria-label="Select contribution year" id="year-toggle-buttons">
+          <button
+            type="button"
+            data-y="past"
+            aria-pressed="true"
+            class="cal-y-btn flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code border border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] font-semibold rounded-xs transition-all cursor-pointer"
+          >
+            <span>Past year</span>
+            <span class="text-[10px] px-1.5 py-0.5 bg-[var(--accent)] text-white rounded-xs tabular-nums font-bold">842</span>
+          </button>
+          <button
+            type="button"
+            data-y="2026"
+            aria-pressed="false"
+            class="cal-y-btn flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code border border-[var(--edge)] bg-[var(--panel-alt)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs transition-all cursor-pointer"
+          >
+            <span>2026</span>
+            <span class="text-[10px] px-1.5 py-0.5 bg-[var(--panel)] border border-[var(--edge)] text-[var(--fg-muted)] rounded-xs tabular-nums">788</span>
+          </button>
+          <button
+            type="button"
+            data-y="2025"
+            aria-pressed="false"
+            class="cal-y-btn flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code border border-[var(--edge)] bg-[var(--panel-alt)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs transition-all cursor-pointer"
+          >
+            <span>2025</span>
+            <span class="text-[10px] px-1.5 py-0.5 bg-[var(--panel)] border border-[var(--edge)] text-[var(--fg-muted)] rounded-xs tabular-nums">654</span>
+          </button>
+        </div>
+
+        <!-- Pac-Man Action & Score Counter -->
+        <div class="flex items-center gap-3">
+          <span id="pacman-score-display" class="hidden text-amber-400 font-bold ml-2 font-mono-code text-xs"></span>
+          <button
+            type="button"
+            id="pacman-play-btn"
+            class="pacbtn flex items-center gap-2 px-3 py-1.5 text-xs font-mono-code border border-[var(--edge)] bg-[var(--panel-alt)] hover:border-amber-400 hover:text-amber-400 transition-all rounded-xs cursor-pointer group"
+            title="Watch Pac-Man eat all contributions at classic arcade pace"
+          >
+            <svg viewBox="-6 -6 12 12" width="13" height="13" aria-hidden="true" class="text-amber-400">
+              <path d="M0 0 L4.6 2.7 A5.3 5.3 0 1 1 4.6 -2.7 Z" fill="#ffd21f"></path>
+            </svg>
+            <span class="font-semibold group-hover:underline">Play Pac-Man</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Real Scalable SVG Contribution Matrix -->
+      <div class="map-scroll-area overflow-x-auto pb-2" id="heatmap-container">
+        <svg
+          id="contribution-heatmap-svg"
+          viewBox={`0 0 ${svgWidth} 105`}
+          role="img"
+          aria-label="Contributions per day in the past year"
+          class="w-full min-w-[34rem] h-auto block select-none"
+        >
+          <!-- Month Labels -->
+          <g id="heatmap-month-labels">
+            {pastCalendar.monthLabels.map(m => (
+              <text x={m.x} y="10" class="svg-mono-text text-[8px] fill-[var(--fg-muted)] font-mono-code">
+                {m.text}
+              </text>
+            ))}
+          </g>
+
+          <!-- Day Labels (Mon, Wed, Fri) -->
+          <text x="0" y="37" class="svg-mono-text text-[7px] fill-[var(--fg-muted)] font-mono-code">Mon</text>
+          <text x="0" y="61" class="svg-mono-text text-[7px] fill-[var(--fg-muted)] font-mono-code">Wed</text>
+          <text x="0" y="85" class="svg-mono-text text-[7px] fill-[var(--fg-muted)] font-mono-code">Fri</text>
+
+          <!-- Circle Dots Grid -->
+          <g id="heatmap-dots-group">
+            {pastCalendar.weeks.map(week => (
+              week.map(day => (
+                <circle
+                  data-i={day.index}
+                  data-col={day.col}
+                  data-row={day.row}
+                  data-count={day.count}
+                  data-date={day.dateStr}
+                  class={`heat-dot l${day.level}`}
+                  cx={day.cx}
+                  cy={day.cy}
+                  r={day.r}
+                >
+                  <title>{`${day.count} contribution${day.count === 1 ? '' : 's'} on ${day.dateStr}`}</title>
+                </circle>
+              ))
+            ))}
+          </g>
+        </svg>
+      </div>
+
+      <!-- Bottom Bar: Status / Legend -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4 pt-3 border-t border-[var(--edge)] font-mono-code text-[11px] text-[var(--fg-muted)]">
+        <div id="pacman-announcement" class="text-xs text-[var(--fg)]">
+          Hover over dots to inspect contribution frequency.
+        </div>
+
+        <!-- Legend scale -->
+        <div class="flex items-center gap-1.5 self-end sm:self-auto select-none">
+          <span>Less</span>
+          <span class="w-2.5 h-2.5 rounded-xs bg-[var(--line)] opacity-40"></span>
+          <span class="w-2.5 h-2.5 rounded-xs bg-[#064e3b]"></span>
+          <span class="w-2.5 h-2.5 rounded-xs bg-[#047857]"></span>
+          <span class="w-2.5 h-2.5 rounded-xs bg-[#10b981]"></span>
+          <span class="w-2.5 h-2.5 rounded-xs bg-[#34d399]"></span>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Public Open Source Repositories Showcase (9 Real GitHub Repositories) -->
+    <div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-base font-semibold tracking-tight text-[var(--fg)] font-mono-code uppercase">
+            Public Repositories
+          </h3>
+          <p class="text-xs text-[var(--fg-muted)] font-mono-code mt-0.5">
+            Active repositories from github.com/srpranto
+          </p>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="flex items-center gap-1.5 font-mono-code text-xs flex-wrap" id="repo-filter-buttons">
+          <button
+            type="button"
+            data-filter="all"
+            class="filter-chip px-2.5 py-1 border border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] font-semibold rounded-xs cursor-pointer transition-all"
+          >
+            All <span class="opacity-75">({openSourceData.repos.length})</span>
+          </button>
+          <button
+            type="button"
+            data-filter="TypeScript"
+            class="filter-chip px-2.5 py-1 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs cursor-pointer transition-all"
+          >
+            TypeScript <span class="opacity-75">(8)</span>
+          </button>
+          <button
+            type="button"
+            data-filter="fullstack"
+            class="filter-chip px-2.5 py-1 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs cursor-pointer transition-all"
+          >
+            Full Stack <span class="opacity-75">(4)</span>
+          </button>
+          <button
+            type="button"
+            data-filter="frontend"
+            class="filter-chip px-2.5 py-1 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs cursor-pointer transition-all"
+          >
+            Frontend <span class="opacity-75">(4)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Repositories Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="repos-grid">
+        {openSourceData.repos.map((repo) => (
+          <article
+            class="repo-card corner-box p-4 hover:border-[var(--accent-border)] transition-all flex flex-col justify-between"
+            data-lang={repo.language}
+            data-cat={repo.category || 'other'}
+          >
+            <div>
+              <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-[var(--edge)]">
+                <div class="flex items-center gap-1.5 truncate">
+                  <FolderGit2 className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
+                  <a
+                    href={repo.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-mono-code text-xs font-semibold text-[var(--fg)] hover:text-[var(--accent)] transition-colors flex items-center gap-1 truncate"
+                  >
+                    <span>{repo.name.replace('srpranto/', '')}</span>
+                    <ExternalLink className="w-3 h-3 opacity-60 shrink-0" />
+                  </a>
+                </div>
+                <span class="badge-mono text-[10px] shrink-0">{repo.language}</span>
+              </div>
+
+              <p class="text-xs text-[var(--fg-muted)] leading-relaxed font-sans text-pretty">
+                {repo.description}
+              </p>
+            </div>
+
+            <div class="mt-4 pt-2.5 border-t border-[var(--edge)] flex items-center justify-between text-[11px] font-mono-code text-[var(--fg-muted)]">
+              <span class="flex items-center gap-1">
+                <GitBranch className="w-3 h-3 text-[var(--fg-faint)]" />
+                <span>main</span>
+              </span>
+              <a
+                href={repo.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-[var(--accent)] transition-colors flex items-center gap-1"
+              >
+                <span>Code</span>
+                <span>↗</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Subtle dark-mode horizontal scrollbar */
+  .map-scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: var(--edge) transparent;
+  }
+
+  .map-scroll-area::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .map-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .map-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--edge);
+    border-radius: 2px;
+  }
+
+  .map-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: var(--edge-strong);
+  }
+
+  /* Heatmap circle styling (Global for dynamic JS innerHTML switching) */
+  :global(.heat-dot) {
+    transition: opacity 0.15s ease, fill 0.3s ease;
+    cursor: pointer;
+  }
+
+  :global(.heat-dot.l0) {
+    fill: var(--line);
+    opacity: 0.45;
+  }
+
+  :global(.heat-dot.l1) {
+    fill: #064e3b;
+    opacity: 0.7;
+  }
+
+  :global(.heat-dot.l2) {
+    fill: #047857;
+    opacity: 0.85;
+  }
+
+  :global(.heat-dot.l3) {
+    fill: #10b981;
+  }
+
+  :global(.heat-dot.l4) {
+    fill: #34d399;
+  }
+
+  :global(.heat-dot:hover) {
+    fill: var(--fg) !important;
+    opacity: 1 !important;
+  }
+
+  /* When eaten by Pac-Man */
+  :global(.heat-dot.eaten) {
+    fill: #18191b !important;
+    opacity: 0.2 !important;
+    transform: scale(0.65);
+    transform-origin: center;
+    transition: all 0.2s ease-out;
+  }
+
+  .pacbtn:hover svg path {
+    fill: #ffe066;
+  }
+</style>
+
+<script>
+  function setupOpenSourceSection() {
+    const section = document.getElementById('open-source');
+    if (!section) return;
+
+    const calsData = JSON.parse(section.dataset.cals || '{}');
+    let currentYearKey = 'past';
+
+    const pacBtn = document.getElementById('pacman-play-btn') as HTMLButtonElement | null;
+    const svg = document.getElementById('contribution-heatmap-svg') as SVGSVGElement | null;
+    const dotsGroup = document.getElementById('heatmap-dots-group') as SVGGElement | null;
+    const monthLabelsGroup = document.getElementById('heatmap-month-labels') as SVGGElement | null;
+    const container = document.getElementById('heatmap-container') as HTMLElement | null;
+    const scoreDisplay = document.getElementById('pacman-score-display');
+    const announcement = document.getElementById('pacman-announcement');
+    const totalContribsEl = document.getElementById('stat-total-contribs');
+    const streakDaysEl = document.getElementById('stat-streak-days');
+
+    let isPlayingPacman = false;
+
+    // --- 1. Year Toggles Handler (Past year, 2026, 2025) ---
+    const yearBtns = document.querySelectorAll<HTMLButtonElement>('#year-toggle-buttons .cal-y-btn');
+    yearBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (isPlayingPacman) return;
+        const targetYear = btn.dataset.y as 'past' | '2026' | '2025';
+        if (!targetYear || targetYear === currentYearKey) return;
+        currentYearKey = targetYear;
+
+        // Update button styles and badges
+        yearBtns.forEach(b => {
+          const isSelected = b === btn;
+          b.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          const badge = b.querySelector('span:last-child');
+          if (isSelected) {
+            b.className = 'cal-y-btn flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code border border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] font-semibold rounded-xs transition-all cursor-pointer';
+            if (badge) badge.className = 'text-[10px] px-1.5 py-0.5 bg-[var(--accent)] text-white rounded-xs tabular-nums font-bold';
+          } else {
+            b.className = 'cal-y-btn flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono-code border border-[var(--edge)] bg-[var(--panel-alt)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--edge-strong)] rounded-xs transition-all cursor-pointer';
+            if (badge) badge.className = 'text-[10px] px-1.5 py-0.5 bg-[var(--panel)] border border-[var(--edge)] text-[var(--fg-muted)] rounded-xs tabular-nums';
+          }
+        });
+
+        // Switch dataset
+        const cal = calsData[currentYearKey];
+        if (!cal || !dotsGroup || !monthLabelsGroup) return;
+
+        if (totalContribsEl) totalContribsEl.textContent = String(cal.total);
+        if (streakDaysEl) streakDaysEl.textContent = String(cal.streak);
+
+        // Re-render month labels
+        monthLabelsGroup.innerHTML = cal.monthLabels.map((m: { text: string; x: number }) => 
+          `<text x="${m.x}" y="10" class="svg-mono-text text-[8px] fill-[var(--fg-muted)] font-mono-code">${m.text}</text>`
+        ).join('');
+
+        // Re-render dots
+        const dotFills = ['var(--line)', '#064e3b', '#047857', '#10b981', '#34d399'];
+        dotsGroup.innerHTML = cal.weeks.map((week: any[]) => 
+          week.map(day => 
+            `<circle data-i="${day.index}" data-col="${day.col}" data-row="${day.row}" data-count="${day.count}" data-date="${day.dateStr}" class="heat-dot l${day.level}" fill="${dotFills[day.level]}" cx="${day.cx}" cy="${day.cy}" r="${day.r}"><title>${day.count} contribution${day.count === 1 ? '' : 's'} on ${day.dateStr}</title></circle>`
+          ).join('')
+        ).join('');
+
+        if (announcement) {
+          announcement.textContent = `Loaded ${targetYear === 'past' ? 'past year' : targetYear} activity (${cal.total} contributions).`;
+        }
+      });
+    });
+
+    // --- 2. Classic Arcade Pac-Man Engine (Relaxed, Smooth & Natural) ---
+    const mouthPath = (angle: number, radius = 5.6) => {
+      const cos = (radius * Math.cos(angle)).toFixed(2);
+      const sin = (radius * Math.sin(angle)).toFixed(2);
+      const negSin = (-radius * Math.sin(angle)).toFixed(2);
+      return `M0 0 L${cos} ${sin} A${radius} ${radius} 0 1 1 ${cos} ${negSin} Z`;
+    };
+
+    pacBtn?.addEventListener('click', async () => {
+      if (isPlayingPacman || !svg || !container || !dotsGroup) return;
+      isPlayingPacman = true;
+      pacBtn.disabled = true;
+      container.scrollLeft = 0;
+
+      if (scoreDisplay) {
+        scoreDisplay.classList.remove('hidden');
+        scoreDisplay.textContent = 'Score: 0';
+      }
+      if (announcement) {
+        announcement.textContent = 'Pac-Man is eating every single contribution...';
+      }
+
+      // Collect all dots currently in the SVG
+      const allDots = Array.from(dotsGroup.querySelectorAll<SVGCircleElement>('.heat-dot'));
+      const activeDots = allDots.filter(d => Number(d.dataset.count || 0) > 0);
+      const totalActiveCount = activeDots.reduce((sum, d) => sum + Number(d.dataset.count || 0), 0);
+
+      // Build smooth Serpentine Grid Waypoints
+      const waypoints: { x: number; y: number; at: number; dot?: SVGCircleElement; count: number; dirX: number; dirY: number }[] = [];
+
+      const colMap = new Map<number, SVGCircleElement[]>();
+      allDots.forEach(d => {
+        const col = Number(d.dataset.col || 0);
+        if (!colMap.has(col)) colMap.set(col, []);
+        colMap.get(col)!.push(d);
+      });
+
+      // Starting point slightly before first dot
+      const firstColDots = colMap.get(0) || [];
+      const startX = Number(firstColDots[0]?.getAttribute('cx') || 28) - 14;
+      const startY = Number(firstColDots[0]?.getAttribute('cy') || 22);
+
+      waypoints.push({ x: startX, y: startY, at: 0, count: 0, dirX: 1, dirY: 0 });
+
+      let cumulativeDist = 0;
+      let lastX = startX;
+      let lastY = startY;
+
+      for (let col = 0; col < 52; col++) {
+        let dots = colMap.get(col) || [];
+        dots.sort((a, b) => Number(a.dataset.row) - Number(b.dataset.row));
+        if (col % 2 === 1) {
+          dots = dots.slice().reverse(); // Odd column: move upwards (row 6 -> 0)
+        }
+
+        for (const dot of dots) {
+          const cx = Number(dot.getAttribute('cx'));
+          const cy = Number(dot.getAttribute('cy'));
+          const cnt = Number(dot.dataset.count || 0);
+
+          const dist = Math.hypot(cx - lastX, cy - lastY);
+          cumulativeDist += dist;
+          waypoints.push({
+            x: cx,
+            y: cy,
+            at: cumulativeDist,
+            dot,
+            count: cnt,
+            dirX: cx !== lastX ? Math.sign(cx - lastX) : 0,
+            dirY: cy !== lastY ? Math.sign(cy - lastY) : 0
+          });
+          lastX = cx;
+          lastY = cy;
+        }
+      }
+
+      const totalDist = cumulativeDist;
+      // Relaxed, smooth classic arcade speed: ~85 px/s
+      const speed = 85;
+
+      // Create Pacman SVG Element
+      const pacG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      pacG.setAttribute('class', 'pac');
+      pacG.setAttribute('pointer-events', 'none');
+
+      const pacPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pacPath.setAttribute('fill', '#ffd21f');
+      pacPath.setAttribute('d', mouthPath(0.6));
+      pacG.appendChild(pacPath);
+      svg.appendChild(pacG);
+
+      let waypointIndex = 1;
+      let totalScore = 0;
+      let rotation = 0;
+      let lastChompTime = -1000;
+      const startTime = performance.now();
+
+      await new Promise<void>(resolve => {
+        function tick(now: number) {
+          const elapsed = now - startTime;
+          const currentProgress = Math.min(totalDist, (elapsed / 1000) * speed);
+
+          // Advance through passed waypoints and eat every active dot reached
+          while (waypointIndex < waypoints.length && waypoints[waypointIndex].at <= currentProgress) {
+            const pt = waypoints[waypointIndex++];
+            if (pt.dot && pt.count > 0 && !pt.dot.classList.contains('eaten')) {
+              pt.dot.classList.add('eaten');
+              totalScore += pt.count;
+              if (scoreDisplay) scoreDisplay.textContent = `Score: ${totalScore}`;
+
+              // Audio chomp throttled to rhythmic arcade timing (~140ms)
+              if (elapsed - lastChompTime > 140) {
+                if (typeof window.__playPacmanChomp === 'function') {
+                  window.__playPacmanChomp();
+                }
+                lastChompTime = elapsed;
+              }
+            }
+          }
+
+          const prev = waypoints[Math.max(0, waypointIndex - 1)];
+          const next = waypoints[Math.min(waypointIndex, waypoints.length - 1)];
+          const segmentDist = next.at - prev.at;
+          const blend = segmentDist > 0 ? (currentProgress - prev.at) / segmentDist : 1;
+
+          const curX = prev.x + (next.x - prev.x) * blend;
+          const curY = prev.y + (next.y - prev.y) * blend;
+
+          // Rotation angle towards current movement direction
+          if (next.x !== prev.x || next.y !== prev.y) {
+            rotation = Math.atan2(next.y - prev.y, next.x - prev.x) * 180 / Math.PI;
+          }
+
+          pacG.setAttribute('transform', `translate(${curX} ${curY}) rotate(${rotation})`);
+          // Smooth mouth opening/closing synced to movement
+          pacPath.setAttribute('d', mouthPath(0.08 + 0.55 * Math.abs(Math.sin(elapsed / 150))));
+
+          // Auto-scroll container smoothly to keep Pac-Man centered
+          if (container && container.scrollWidth > container.clientWidth) {
+            const targetScroll = Math.max(0, curX - container.clientWidth * 0.45);
+            container.scrollLeft += (targetScroll - container.scrollLeft) * 0.12;
+          }
+
+          if (currentProgress < totalDist) {
+            requestAnimationFrame(tick);
+          } else {
+            // Guarantee 100% of active dots are eaten
+            activeDots.forEach(d => d.classList.add('eaten'));
+            totalScore = totalActiveCount;
+            if (scoreDisplay) scoreDisplay.textContent = `Score: ${totalScore}`;
+
+            setTimeout(() => {
+              pacG.remove();
+              const durationSec = (elapsed / 1000).toFixed(1);
+              if (announcement) {
+                announcement.innerHTML = `<span class="text-amber-400 font-bold">Game clear!</span> Pac-Man ate all <strong class="text-[var(--fg)]">${totalScore}</strong> contributions in <strong class="text-[var(--fg)]">${durationSec}s</strong>.`;
+              }
+              setTimeout(() => {
+                allDots.forEach(d => d.classList.remove('eaten'));
+                if (scoreDisplay) scoreDisplay.classList.add('hidden');
+                isPlayingPacman = false;
+                if (pacBtn) pacBtn.disabled = false;
+              }, 3000);
+              resolve();
+            }, 600);
+          }
+        }
+
+        requestAnimationFrame(tick);
+      });
+    });
+
+    // --- 3. Repositories Category Filter ---
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>('#repo-filter-buttons .filter-chip');
+    const repoCards = document.querySelectorAll<HTMLElement>('#repos-grid .repo-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter || 'all';
+
+        // Update active chip styles
+        filterButtons.forEach(b => {
+          if (b === btn) {
+            b.classList.remove('border-[var(--edge)]', 'bg-[var(--panel)]', 'text-[var(--fg-muted)]');
+            b.classList.add('border-[var(--accent)]', 'bg-[var(--accent-soft)]', 'text-[var(--accent)]', 'font-semibold');
+          } else {
+            b.classList.add('border-[var(--edge)]', 'bg-[var(--panel)]', 'text-[var(--fg-muted)]');
+            b.classList.remove('border-[var(--accent)]', 'bg-[var(--accent-soft)]', 'text-[var(--accent)]', 'font-semibold');
+          }
+        });
+
+        // Filter cards
+        repoCards.forEach(card => {
+          const lang = card.dataset.lang;
+          const cat = card.dataset.cat;
+
+          let match = false;
+          if (filter === 'all') match = true;
+          else if (filter === 'TypeScript' && lang === 'TypeScript') match = true;
+          else if (filter === 'fullstack' && cat === 'fullstack') match = true;
+          else if (filter === 'frontend' && cat === 'frontend') match = true;
+
+          card.style.display = match ? 'flex' : 'none';
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupOpenSourceSection);
+  } else {
+    setupOpenSourceSection();
+  }
+</script>

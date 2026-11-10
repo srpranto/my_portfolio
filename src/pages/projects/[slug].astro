@@ -1,0 +1,276 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import { projectsData, personalInfo, type Project } from '../../data/portfolio';
+
+import lunaImg from '../../assets/projects/luna-live.png';
+import bookVibeImg from '../../assets/projects/book-vibe-live.png';
+import countriesImg from '../../assets/projects/countries-explorer-live.png';
+import bazarDorImg from '../../assets/projects/bazar-dor-live.png';
+import hateyhatImg from '../../assets/projects/hateyhat-live.png';
+
+const projectImages: Record<string, ImageMetadata> = {
+  luna: lunaImg,
+  'book-vibe': bookVibeImg,
+  'countries-explorer': countriesImg,
+  'bazar-dor': bazarDorImg,
+  hateyhat: hateyhatImg,
+};
+
+export function getStaticPaths() {
+  return projectsData.map((project, index) => {
+    const prev = index > 0 ? projectsData[index - 1] : projectsData[projectsData.length - 1];
+    const next = index < projectsData.length - 1 ? projectsData[index + 1] : projectsData[0];
+    return {
+      params: { slug: project.slug },
+      props: { project, prevProject: prev, nextProject: next }
+    };
+  });
+}
+
+interface Props {
+  project: Project;
+  prevProject: Project;
+  nextProject: Project;
+}
+
+const { project, prevProject, nextProject } = Astro.props;
+---
+
+<Layout
+  title={`${project.title} — Case Study | ${personalInfo.name}`}
+  description={project.description}
+>
+  <main class="py-12 md:py-20 bg-grid-pattern min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumb & Back Link -->
+      <nav class="flex items-center justify-between pb-6 border-b border-[var(--edge)] font-mono-code text-xs text-[var(--fg-muted)]">
+        <a href="/#projects" class="flex items-center gap-1.5 hover:text-[var(--fg)] transition-colors">
+          <span>←</span>
+          <span>Back to Projects</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <span class="badge-mono">{project.category}</span>
+          <span class="badge-mono border-emerald-500/30 text-emerald-500">● {project.status}</span>
+        </div>
+      </nav>
+
+      <!-- Project Hero Header -->
+      <header class="pt-8 pb-10 space-y-4">
+        <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold">
+          <span>CASE STUDY //</span>
+          <span class="text-[var(--fg-muted)] tabular-nums">{project.year}</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.025em] text-[var(--fg)] text-balance">
+          {project.title}
+        </h1>
+        <p class="text-base sm:text-lg text-[var(--fg-muted)] font-normal text-pretty max-w-2xl leading-relaxed">
+          {project.tagline}
+        </p>
+
+        <!-- CTAs: Live Project Link & GitHub Repository Link (Client Only) -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-dj btn-dj-primary text-xs sm:text-sm py-2.5 px-4"
+          >
+            <span>Live Demo</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+
+          <a
+            href={project.githubClientUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-dj text-xs sm:text-sm py-2.5 px-4"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub Repository</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Featured Image Banner -->
+      <div class="corner-box mb-12">
+        <div class="overflow-hidden">
+          <div class="relative aspect-16/9 bg-[var(--panel-alt)] img-outline">
+            <Image
+              src={projectImages[project.slug]}
+              alt={`${project.title} Preview`}
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between font-mono-code text-xs text-white">
+              <span>{project.title}</span>
+              <span class="badge-mono bg-black/60 text-white border-white/20">Production View</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Case Study Content Sections -->
+      <div class="space-y-10">
+        <!-- 1. Description & Purpose -->
+        <section class="corner-box p-6 md:p-8 space-y-4">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider pb-2 border-b border-[var(--edge)]">
+            <span>01 //</span>
+            <span class="text-[var(--fg)]">Overview & Purpose</span>
+          </div>
+          <p class="text-sm md:text-base text-[var(--fg)] leading-relaxed font-sans text-pretty">
+            {project.description}
+          </p>
+          <p class="text-xs md:text-sm text-[var(--fg-muted)] leading-relaxed font-sans text-pretty">
+            {project.longDescription}
+          </p>
+        </section>
+
+        <!-- 2. Main Technology Stack Used (Requirement 9) -->
+        <section class="corner-box p-6 md:p-8 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-[var(--edge)]">
+            <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider">
+              <span>02 //</span>
+              <span class="text-[var(--fg)]">Technologies Used</span>
+            </div>
+            <span class="font-mono-code text-xs text-[var(--fg-muted)]">{project.techStack.length} dependencies</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-1">
+            {project.techStack.map((tech) => (
+              <div class="p-3 border border-[var(--edge)] bg-[var(--panel-alt)] rounded-xs font-mono-code">
+                <div class="text-xs font-semibold text-[var(--fg)]">{tech.name}</div>
+                <div class="text-[10px] uppercase text-[var(--accent)] mt-0.5">{tech.category}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- 3. Key Features -->
+        <section class="corner-box p-6 md:p-8 space-y-4">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider pb-2 border-b border-[var(--edge)]">
+            <span>03 //</span>
+            <span class="text-[var(--fg)]">Key Features</span>
+          </div>
+          <ul class="space-y-2.5 text-xs sm:text-sm text-[var(--fg-muted)] font-sans pt-1">
+            {project.highlights.map((highlight) => (
+              <li class="flex items-start gap-2.5">
+                <span class="font-mono-code text-[var(--accent)] font-bold mt-0.5">↳</span>
+                <span class="leading-relaxed">{highlight}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- 4. Challenges & Solutions (Requirement 9) -->
+        <section class="corner-box p-6 md:p-8 space-y-5">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider pb-2 border-b border-[var(--edge)]">
+            <span>04 //</span>
+            <span class="text-[var(--fg)]">Challenges & Solutions</span>
+          </div>
+          <p class="text-xs text-[var(--fg-muted)]">
+            Technical problems encountered during development and how they were resolved:
+          </p>
+
+          <div class="space-y-4 pt-1">
+            {project.challenges.map((c, i) => (
+              <div class="border border-[var(--edge)] bg-[var(--panel-alt)] p-4 rounded-xs space-y-2.5">
+                <div class="flex items-center gap-2 font-mono-code text-xs font-semibold text-[var(--fg)]">
+                  <span class="text-[var(--accent)]">#{i + 1}</span>
+                  <span>{c.title}</span>
+                </div>
+                <div class="text-xs text-[var(--fg-muted)] space-y-1.5 font-sans">
+                  <div>
+                    <strong class="font-mono-code text-[11px] text-rose-500 uppercase">Problem:</strong>
+                    <p class="mt-0.5 leading-relaxed">{c.problem}</p>
+                  </div>
+                  <div>
+                    <strong class="font-mono-code text-[11px] text-emerald-600 dark:text-emerald-400 uppercase">Solution:</strong>
+                    <p class="mt-0.5 leading-relaxed">{c.solution}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- 5. Potential Improvements & Future Plans (Requirement 9) -->
+        <section class="corner-box p-6 md:p-8 space-y-4">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider pb-2 border-b border-[var(--edge)]">
+            <span>05 //</span>
+            <span class="text-[var(--fg)]">Planned Improvements</span>
+          </div>
+          <p class="text-xs text-[var(--fg-muted)]">
+            Planned updates and improvements for this project:
+          </p>
+          <ul class="space-y-2.5 text-xs sm:text-sm text-[var(--fg-muted)] pt-1">
+            {project.futurePlans.map((plan) => (
+              <li class="flex items-start gap-2.5">
+                <span class="font-mono-code text-[var(--accent)] font-bold mt-0.5">↳</span>
+                <span class="leading-relaxed">{plan}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Action Bar: Live Demo & Client GitHub Bottom Anchor -->
+        <div class="corner-box p-6 bg-[var(--panel-alt)] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-center sm:text-left">
+            <h4 class="text-sm font-semibold text-[var(--fg)]">Explore the project</h4>
+            <p class="text-xs text-[var(--fg-muted)] mt-0.5">Test the live application or inspect the code on GitHub.</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-dj btn-dj-primary text-xs py-2 px-3.5"
+            >
+              Live Demo ↗
+            </a>
+            <a
+              href={project.githubClientUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-dj text-xs py-2 px-3.5"
+            >
+              GitHub ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Next / Prev Project Pagination Navigation -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[var(--edge)]">
+          <a
+            href={`/projects/${prevProject.slug}`}
+            class="corner-box p-4 hover:border-[var(--accent-border)] transition-colors group text-left"
+          >
+            <div class="font-mono-code text-[11px] text-[var(--fg-muted)] flex items-center gap-1">
+              <span>←</span> Previous Project
+            </div>
+            <div class="text-sm font-semibold text-[var(--fg)] mt-1 group-hover:text-[var(--accent)] transition-colors">
+              {prevProject.title}
+            </div>
+            <div class="text-[11px] text-[var(--fg-muted)]">{prevProject.tagline}</div>
+          </a>
+
+          <a
+            href={`/projects/${nextProject.slug}`}
+            class="corner-box p-4 hover:border-[var(--accent-border)] transition-colors group text-right sm:text-right"
+          >
+            <div class="font-mono-code text-[11px] text-[var(--fg-muted)] flex items-center justify-end gap-1">
+              Next Project <span>→</span>
+            </div>
+            <div class="text-sm font-semibold text-[var(--fg)] mt-1 group-hover:text-[var(--accent)] transition-colors">
+              {nextProject.title}
+            </div>
+            <div class="text-[11px] text-[var(--fg-muted)]">{nextProject.tagline}</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

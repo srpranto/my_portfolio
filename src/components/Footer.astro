@@ -1,0 +1,64 @@
+---
+import { personalInfo } from '../data/portfolio';
+---
+
+<footer class="border-t border-[var(--edge)] bg-[var(--bg)] text-[var(--fg-muted)] py-8 font-mono-code text-xs select-none" id="site-footer" data-noprint>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <!-- Left: Identity & Copyright -->
+    <div class="flex items-center gap-2">
+      <span class="font-semibold text-[var(--fg)]">{personalInfo.name}</span>
+      <span class="text-[var(--fg-faint)]">/</span>
+      <span>© 2026</span>
+      <span class="hidden md:inline text-[var(--fg-faint)]">•</span>
+      <span class="hidden md:inline text-[var(--fg-faint)]">{personalInfo.location}</span>
+    </div>
+
+    <!-- Center: Quiet Colophon -->
+    <div class="text-[11px] text-[var(--fg-faint)] hidden lg:block">
+      Built with Astro, TypeScript & Tailwind CSS
+    </div>
+
+    <!-- Right: Essential Links & Back to top -->
+    <div class="flex items-center gap-4 text-xs">
+      <a
+        href={personalInfo.socialLinks.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-[var(--accent)] transition-colors"
+      >
+        GitHub ↗
+      </a>
+      <a
+        href={personalInfo.socialLinks.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-[var(--accent)] transition-colors"
+      >
+        LinkedIn ↗
+      </a>
+      <a
+        href={personalInfo.resumeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-[var(--accent)] transition-colors"
+      >
+        Résumé ↗
+      </a>
+      <button
+        type="button"
+        id="footer-back-to-top"
+        class="hover:text-[var(--fg)] transition-colors cursor-pointer text-xs ml-2 text-[var(--fg)] flex items-center gap-1"
+        aria-label="Back to top of page"
+      >
+        <span>Top</span>
+        <span class="text-[10px]">↑</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  document.getElementById('footer-back-to-top')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

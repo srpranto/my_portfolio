@@ -1,0 +1,598 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #ebeae4;
+    --bg-subtle: #e2e1d9;
+    --panel: #f5f4ef;
+    --panel-elevated: #ffffff;
+    --panel-alt: #eeede6;
+    --fg: #121317;
+    --fg-muted: #4b4e57;
+    --fg-faint: #767882;
+    --edge: #c4c2b9;
+    --edge-strong: #96948b;
+    --line: rgba(18, 19, 23, 0.1);
+    --line-strong: rgba(18, 19, 23, 0.2);
+    --grid-dot: rgba(18, 19, 23, 0.08);
+
+    /* Accent default: Electric Blue */
+    --accent: #2335df;
+    --accent-glow: #6f7cff;
+    --accent-soft: rgba(35, 53, 223, 0.08);
+    --accent-border: rgba(35, 53, 223, 0.3);
+    --accent-ink: #ffffff;
+  }
+
+  html.dark,
+  [data-theme="dark"] {
+    --bg: #0f1013;
+    --bg-subtle: #14161c;
+    --panel: #16181e;
+    --panel-elevated: #1e2129;
+    --panel-alt: #1a1c24;
+    --fg: #ebeae4;
+    --fg-muted: #a0a2a9;
+    --fg-faint: #636672;
+    --edge: #2b2e36;
+    --edge-strong: #454955;
+    --line: rgba(235, 234, 228, 0.1);
+    --line-strong: rgba(235, 234, 228, 0.2);
+    --grid-dot: rgba(235, 234, 228, 0.08);
+
+    --accent: #7d87ff;
+    --accent-glow: #2b37e6;
+    --accent-soft: rgba(125, 135, 255, 0.12);
+    --accent-border: rgba(125, 135, 255, 0.35);
+    --accent-ink: #0c0d10;
+  }
+
+  /* Accent overrides */
+  [data-accent="violet"] {
+    --accent: #6b2fd6;
+    --accent-glow: #b48cff;
+    --accent-soft: rgba(107, 47, 214, 0.09);
+    --accent-border: rgba(107, 47, 214, 0.35);
+  }
+  html.dark[data-accent="violet"],
+  [data-theme="dark"][data-accent="violet"] {
+    --accent: #b48cff;
+    --accent-glow: #6b2fd6;
+    --accent-soft: rgba(180, 140, 255, 0.14);
+    --accent-border: rgba(180, 140, 255, 0.4);
+  }
+
+  [data-accent="rose"] {
+    --accent: #c4234f;
+    --accent-glow: #ff7a9c;
+    --accent-soft: rgba(196, 35, 79, 0.09);
+    --accent-border: rgba(196, 35, 79, 0.35);
+  }
+  html.dark[data-accent="rose"],
+  [data-theme="dark"][data-accent="rose"] {
+    --accent: #ff7a9c;
+    --accent-glow: #c4234f;
+    --accent-soft: rgba(255, 122, 156, 0.14);
+    --accent-border: rgba(255, 122, 156, 0.4);
+  }
+
+  [data-accent="amber"] {
+    --accent: #b05700;
+    --accent-glow: #ffb547;
+    --accent-soft: rgba(176, 87, 0, 0.09);
+    --accent-border: rgba(176, 87, 0, 0.35);
+  }
+  html.dark[data-accent="amber"],
+  [data-theme="dark"][data-accent="amber"] {
+    --accent: #ffb547;
+    --accent-glow: #b05700;
+    --accent-soft: rgba(255, 181, 71, 0.14);
+    --accent-border: rgba(255, 181, 71, 0.4);
+  }
+
+  [data-accent="teal"] {
+    --accent: #08705f;
+    --accent-glow: #3fd0bf;
+    --accent-soft: rgba(8, 112, 95, 0.09);
+    --accent-border: rgba(8, 112, 95, 0.35);
+  }
+  html.dark[data-accent="teal"],
+  [data-theme="dark"][data-accent="teal"] {
+    --accent: #3fd0bf;
+    --accent-glow: #08705f;
+    --accent-soft: rgba(63, 208, 191, 0.14);
+    --accent-border: rgba(63, 208, 191, 0.4);
+  }
+
+  * {
+    border-color: var(--edge);
+  }
+
+  html {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  /* devjhawar.com View Transitions Circular Ripple Reveal */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation: none;
+  }
+
+  :root[data-vt="dark"]::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-old(lamp) {
+    display: none;
+  }
+
+  ::view-transition-new(lamp) {
+    animation: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    letter-spacing: -0.025em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  p {
+    text-wrap: pretty;
+    line-height: 1.65;
+  }
+}
+
+@layer components {
+  /* Monospace font utility */
+  .font-mono-code {
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  }
+
+  /* Background grid line pattern */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, var(--grid-dot) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-dot) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Precision corner crosshair '+' marks (signature devjhawar detail) */
+  .corner-box {
+    position: relative;
+    background-color: var(--panel);
+    border: 1px solid var(--edge);
+  }
+
+  .corner-box::before,
+  .corner-box::after {
+    content: "+";
+    position: absolute;
+    font-family: ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 500;
+    color: var(--edge-strong);
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+  }
+
+  .corner-box::before {
+    top: -7px;
+    left: -5px;
+  }
+
+  .corner-box::after {
+    bottom: -7px;
+    right: -5px;
+  }
+
+  /* Plus marks on all 4 corners */
+  .corner-plus-all {
+    position: relative;
+  }
+
+  .corner-plus-all .c-tl,
+  .corner-plus-all .c-tr,
+  .corner-plus-all .c-bl,
+  .corner-plus-all .c-br {
+    position: absolute;
+    font-family: ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 500;
+    color: var(--edge-strong);
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+  }
+
+  .corner-plus-all .c-tl { top: -7px; left: -5px; }
+  .corner-plus-all .c-tr { top: -7px; right: -5px; }
+  .corner-plus-all .c-bl { bottom: -7px; left: -5px; }
+  .corner-plus-all .c-br { bottom: -7px; right: -5px; }
+
+  /* Devjhawar button styling */
+  .btn-dj {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--edge);
+    background: var(--panel);
+    color: var(--fg);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-dj:active,
+  .btn:active,
+  .sq:active,
+  .cal-y-btn:active,
+  .filter-chip:active,
+  .tap-press:active {
+    transform: scale(0.96);
+  }
+
+  .btn-dj:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .btn-dj-primary {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .btn-dj-primary:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+
+  .btn-dj-accent {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .btn-dj-accent:hover {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  /* Pulsing live dot */
+  .live-pulse {
+    position: relative;
+    display: inline-flex;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: #10b981;
+  }
+
+  .live-pulse::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background-color: #10b981;
+    animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+    opacity: 0.75;
+  }
+
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  /* Monospace pill badge */
+  .badge-mono {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--edge);
+    background: var(--panel-alt);
+    color: var(--fg-muted);
+    border-radius: 2px;
+  }
+
+  /* devjhawar.com Signature Navbar Tokens & Components */
+  .bar {
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 95%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--edge);
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .bar.scrolled {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    border-bottom-color: var(--edge-strong);
+  }
+
+  .bar .inner {
+    max-width: 1200px;
+    width: calc(100% - 2rem);
+    height: 3.75rem;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  @media (min-width: 640px) {
+    .bar .inner {
+      width: calc(100% - 3rem);
+    }
+  }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+    font-stretch: 80%;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .mark:hover .hint {
+    color: var(--accent);
+  }
+
+  .mark .who {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .mark .who-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    transition: color 0.15s ease;
+  }
+
+  .mark:hover .who-name {
+    color: var(--accent);
+  }
+
+  .mark .hint {
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    color: var(--fg-muted);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-top: 2px;
+    transition: color 0.15s ease;
+  }
+
+  /* Desktop Nav Links */
+  nav.sections {
+    gap: 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  }
+
+  nav.sections a {
+    white-space: nowrap;
+    padding-block: 0.3rem;
+    color: var(--fg-muted);
+    background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s;
+    text-decoration: none;
+  }
+
+  nav.sections a:hover,
+  nav.sections a.active {
+    color: var(--accent);
+    background-size: 100% 2px;
+  }
+
+  /* Toolbar items standard 2.2rem (35.2px) optical height */
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .find {
+    border: 1px solid var(--edge);
+    background: var(--panel);
+    height: 2.2rem;
+    color: var(--fg-muted);
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0 0.5rem 0 0.7rem;
+    font-size: 0.82rem;
+    border-radius: 0;
+    transition: border-color 0.15s, color 0.15s;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  .find:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+
+  .find kbd {
+    border: 1px solid var(--edge);
+    padding: 0.05rem 0.3rem;
+    font-size: 0.68rem;
+    background: var(--panel-alt);
+    border-radius: 0;
+  }
+
+  .sq {
+    border: 1px solid var(--edge);
+    background: var(--panel);
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0;
+    transition: border-color 0.15s, color 0.15s;
+    display: grid;
+    cursor: pointer;
+    color: var(--fg-muted);
+    position: relative;
+    touch-action: manipulation;
+  }
+
+  /* 44px touch target compliance for mobile */
+  .sq::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    pointer-events: auto;
+  }
+
+  .sq:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+
+  .btn-resume {
+    height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    cursor: pointer;
+  }
+
+  .btn-resume:hover {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  /* devjhawar Signature Accent Swatches Popover */
+  #accent-btn rect,
+  .accents button {
+    fill: var(--c);
+    background: var(--c);
+  }
+
+  [data-theme="dark"] #accent-btn rect,
+  [data-theme="dark"] .accents button {
+    fill: var(--cd);
+    background: var(--cd);
+  }
+
+  .accents {
+    border: 1px solid var(--fg);
+    background: var(--panel);
+    box-shadow: 5px 5px 0 color-mix(in srgb, var(--fg) 12%, transparent);
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0.5rem;
+    position: fixed;
+    inset: auto;
+    z-index: 100;
+    border-radius: 0;
+  }
+
+  .accents:popover-open {
+    display: flex;
+  }
+
+  .accents button {
+    width: 1.75rem;
+    height: 1.75rem;
+    transition: transform 0.15s ease;
+    border: none;
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .accents button:hover {
+    transform: scale(1.1);
+  }
+
+  .accents button[aria-pressed="true"] {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--edge-strong);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-muted);
+}
+
+/* Optical image outline to prevent edge bleed */
+.img-outline {
+  position: relative;
+}
+.img-outline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}

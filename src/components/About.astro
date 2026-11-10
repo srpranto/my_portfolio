@@ -1,0 +1,229 @@
+---
+import { personalInfo } from '../data/portfolio';
+---
+
+<section id="about" class="py-16 md:py-24 border-b border-[var(--edge)] bg-[var(--bg)]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <!-- Section Header -->
+    <div class="flex items-center justify-between pb-6 border-b border-[var(--edge)] font-mono-code text-xs text-[var(--fg-muted)]">
+      <div class="flex items-center gap-2">
+        <span class="text-[var(--accent)] font-semibold">01 //</span>
+        <span class="uppercase tracking-wider font-semibold text-[var(--fg)]">ABOUT</span>
+      </div>
+      <span class="badge-mono">background</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-8">
+      <!-- Left Column: Biography & Journey (Col 1-7) -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--fg)] text-balance">
+          A web developer with a background in management, writing, and teaching.
+        </h2>
+
+        <!-- Narrative Paragraphs -->
+        <div class="space-y-4 text-[15px] sm:text-base text-[var(--fg-muted)] leading-relaxed font-sans text-pretty">
+          {personalInfo.bioNarrative.map((para) => (
+            <p>{para}</p>
+          ))}
+        </div>
+
+        <!-- The Work I Enjoy Most -->
+        <div class="corner-box p-5 space-y-3">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--accent)] font-semibold uppercase tracking-wider">
+            <span class="text-[var(--accent)] font-bold">//</span>
+            <span>Focus & Principles</span>
+          </div>
+          <ul class="space-y-2.5 text-xs sm:text-sm text-[var(--fg-muted)] font-sans">
+            <li class="flex items-start gap-2">
+              <span class="font-mono-code text-[var(--accent)] mt-0.5 font-bold">↳</span>
+              <span><strong class="text-[var(--fg)] font-medium">Frontend Architecture:</strong> Building React and Next.js applications where state transitions feel immediate, predictable, and clean.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="font-mono-code text-[var(--accent)] mt-0.5 font-bold">↳</span>
+              <span><strong class="text-[var(--fg)] font-medium">Layout & Typography:</strong> Establishing intentional hierarchy, comfortable line measures, accessible controls, and layouts that adapt smoothly to any screen.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="font-mono-code text-[var(--accent)] mt-0.5 font-bold">↳</span>
+              <span><strong class="text-[var(--fg)] font-medium">Performance & Privacy:</strong> Keeping bundle sizes light, handling network interruptions gracefully, and testing on real mobile devices.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hobbies & Interests Outside Programming (Requirement 5) -->
+        <div class="space-y-3 pt-2">
+          <div class="flex items-center gap-2 font-mono-code text-xs text-[var(--fg)] font-semibold uppercase tracking-wider">
+            <span class="text-[var(--accent)] font-bold">//</span>
+            <span>Beyond Code</span>
+          </div>
+          <p class="text-xs text-[var(--fg-muted)]">
+            A few things I spend time on when I step away from the keyboard:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            {personalInfo.hobbies.map((hobby) => (
+              <div class="corner-box p-3 hover:border-[var(--accent-border)] transition-colors">
+                <div class="font-mono-code text-xs font-semibold text-[var(--fg)] flex items-center gap-2">
+                  {hobby.icon === 'book' && (
+                    <svg class="w-3.5 h-3.5 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                  )}
+                  {hobby.icon === 'activity' && (
+                    <svg class="w-3.5 h-3.5 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  )}
+                  {hobby.icon === 'pen-tool' && (
+                    <svg class="w-3.5 h-3.5 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l7-7 3 3-7 7-3-3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+                  )}
+                  {hobby.icon === 'compass' && (
+                    <svg class="w-3.5 h-3.5 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                  )}
+                  {hobby.icon === 'gamepad-2' && (
+                    <svg class="w-3.5 h-3.5 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 12h4m-2-2v4m7-1h.01m3-2h.01"/></svg>
+                  )}
+                  <span>{hobby.title}</span>
+                </div>
+                <p class="text-[11px] text-[var(--fg-muted)] mt-1 leading-snug">
+                  {hobby.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Terminal Routine & Principles (Col 8-12) -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        <!-- Monospace Terminal ($ crontab -l & interactive commands) -->
+        <div class="corner-box" id="interactive-terminal">
+          <div class="overflow-hidden">
+            <!-- Terminal header -->
+            <div class="px-4 py-2 bg-[var(--panel-alt)] border-b border-[var(--edge)] flex flex-wrap items-center justify-between gap-2 font-mono-code text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                <span class="ml-2 text-[var(--fg)] font-medium text-[11px]">shahil@terminal:~</span>
+              </div>
+              
+              <!-- Quick interactive command buttons -->
+              <div class="flex items-center gap-1 text-[10px]" id="term-cmd-pills">
+                <button type="button" class="term-pill px-1.5 py-0.5 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] rounded-xs transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
+                <button type="button" class="term-pill px-1.5 py-0.5 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] rounded-xs transition-colors cursor-pointer" data-cmd="uptime">uptime</button>
+                <button type="button" class="term-pill px-1.5 py-0.5 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] rounded-xs transition-colors cursor-pointer" data-cmd="routine">cat routine.txt</button>
+                <button type="button" class="term-pill px-1.5 py-0.5 border border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] font-semibold rounded-xs transition-colors cursor-pointer" data-cmd="crontab">crontab -l</button>
+              </div>
+            </div>
+
+            <!-- Terminal content -->
+            <div class="p-4 bg-[var(--panel)] font-mono-code text-xs space-y-3 min-h-[175px]">
+              <div id="term-dynamic-output">
+                <div class="text-[var(--fg-muted)] flex items-center gap-1.5">
+                  <span class="text-emerald-500 font-semibold">$</span>
+                  <span class="text-[var(--fg)] font-semibold" id="term-active-cmd">crontab -l</span>
+                  <span class="text-[var(--fg-muted)] opacity-70"># what I'm doing these days</span>
+                </div>
+                <div class="space-y-2 pl-2 pt-2 text-[11px]" id="term-body">
+                  {personalInfo.crontabRoutines.map((item) => (
+                    <div class="flex items-start gap-2.5">
+                      <span class="text-[var(--accent)] font-semibold shrink-0 tabular-nums">{item.cron}</span>
+                      <span class="text-[var(--fg)] leading-snug">{item.task}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-[var(--edge)] text-[11px] text-[var(--fg-muted)] flex items-center justify-between">
+                <span>status: <span class="text-emerald-500 font-medium">READY</span></span>
+                <span>focus: <span class="text-[var(--fg)] font-medium">React • Next.js • TypeScript</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Principles Card -->
+        <div class="corner-box p-4 space-y-3">
+          <div class="font-mono-code text-xs font-semibold uppercase text-[var(--fg)] flex items-center justify-between">
+            <span>Guiding Principles</span>
+            <span class="text-[var(--accent)]">03 // rules</span>
+          </div>
+          <div class="space-y-2 text-xs text-[var(--fg-muted)] font-mono-code">
+            <div class="p-2.5 bg-[var(--panel-alt)] border border-[var(--edge)] rounded-xs">
+              <span class="text-[var(--fg)] font-semibold">1. Clarity Over Cleverness:</span>
+              <p class="text-[11px] mt-0.5 leading-normal">Code is read more often than it is written. Simple solutions beat complicated tricks.</p>
+            </div>
+            <div class="p-2.5 bg-[var(--panel-alt)] border border-[var(--edge)] rounded-xs">
+              <span class="text-[var(--fg)] font-semibold">2. Respect the User:</span>
+              <p class="text-[11px] mt-0.5 leading-normal">Interfaces should load fast, work well on phones, and never get in the user's way.</p>
+            </div>
+            <div class="p-2.5 bg-[var(--panel-alt)] border border-[var(--edge)] rounded-xs">
+              <span class="text-[var(--fg)] font-semibold">3. Steady Progress:</span>
+              <p class="text-[11px] mt-0.5 leading-normal">Small, deliberate improvements every day compound into solid software.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const pills = document.querySelectorAll('.term-pill');
+    const activeCmd = document.getElementById('term-active-cmd');
+    const body = document.getElementById('term-body');
+
+    const commandsData = {
+      whoami: {
+        cmd: 'whoami',
+        desc: '# developer identity',
+        html: '<div class="text-[var(--accent)] font-semibold text-xs">md_shahil <span class="text-[var(--fg-muted)] font-normal">(web developer)</span></div><div class="text-[var(--fg-muted)] text-[11px] mt-1">Specialized in React, Next.js, and TypeScript web applications.</div>'
+      },
+      uptime: {
+        cmd: 'uptime',
+        desc: '# journey timeline',
+        html: '<div class="text-[var(--fg)] text-xs">building & learning <span class="text-[var(--accent)] font-semibold">since 2021</span></div><div class="text-[var(--fg-muted)] text-[11px] mt-1">4+ years writing modern JavaScript, crafting accessible interfaces, and solving bugs.</div>'
+      },
+      routine: {
+        cmd: 'cat routine.txt',
+        desc: '# daily developer routine',
+        html: '<div class="space-y-1.5 text-[11px]">' +
+          '<div class="flex items-start gap-2"><span class="text-[var(--accent)] font-semibold tabular-nums">09:00</span><span class="text-[var(--fg)]">Review tasks, read documentation, and plan the day</span></div>' +
+          '<div class="flex items-start gap-2"><span class="text-[var(--accent)] font-semibold tabular-nums">11:00</span><span class="text-[var(--fg)]">Build features, refactor components, and write tests</span></div>' +
+          '<div class="flex items-start gap-2"><span class="text-[var(--accent)] font-semibold tabular-nums">16:00</span><span class="text-[var(--fg)]">Code reviews, GitHub PRs, and open-source contributions</span></div>' +
+          '<div class="flex items-start gap-2"><span class="text-[var(--accent)] font-semibold tabular-nums">21:00</span><span class="text-[var(--fg)]">Explore new libraries, write technical notes, and read</span></div>' +
+        '</div>'
+      },
+      crontab: {
+        cmd: 'crontab -l',
+        desc: '# what I\'m doing these days',
+        html: '<div class="space-y-2 pl-2 text-[11px]">' +
+          '<div class="flex items-start gap-2.5"><span class="text-[var(--accent)] font-semibold shrink-0 tabular-nums">0 22 * * *</span><span class="text-[var(--fg)] leading-snug">review pull requests & code updates on GitHub (Luna, hateyhat-client)</span></div>' +
+          '<div class="flex items-start gap-2.5"><span class="text-[var(--accent)] font-semibold shrink-0 tabular-nums">*/30 * * * *</span><span class="text-[var(--fg)] leading-snug">ship full-stack features on Luna & HateyHat (Next.js, TypeScript)</span></div>' +
+          '<div class="flex items-start gap-2.5"><span class="text-[var(--accent)] font-semibold shrink-0 tabular-nums">0 18 * * 0</span><span class="text-[var(--fg)] leading-snug">write technical web tutorials, architectural notes & documentation</span></div>' +
+          '<div class="flex items-start gap-2.5"><span class="text-[var(--accent)] font-semibold shrink-0 tabular-nums">0 10 * * 1-5</span><span class="text-[var(--fg)] leading-snug">management, operations, and modern frontend systems</span></div>' +
+        '</div>'
+      }
+    };
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const cmdKey = pill.getAttribute('data-cmd');
+        const data = commandsData[cmdKey];
+        if (!data || !activeCmd || !body) return;
+
+        // Update active styles
+        pills.forEach((p) => {
+          p.className = 'term-pill px-1.5 py-0.5 border border-[var(--edge)] bg-[var(--panel)] text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] rounded-xs transition-colors cursor-pointer';
+        });
+        pill.className = 'term-pill px-1.5 py-0.5 border border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] font-semibold rounded-xs transition-colors cursor-pointer';
+
+        // Update output
+        activeCmd.textContent = data.cmd;
+        const descEl = activeCmd.nextElementSibling;
+        if (descEl) descEl.textContent = data.desc;
+        body.innerHTML = data.html;
+
+        if (typeof window.__playTypeSound === 'function') {
+          window.__playTypeSound();
+        }
+      });
+    });
+  });
+</script>

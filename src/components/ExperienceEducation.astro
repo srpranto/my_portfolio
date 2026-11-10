@@ -1,0 +1,123 @@
+---
+import { experienceHistory, educationHistory } from '../data/portfolio';
+---
+
+<section id="experience" class="py-16 md:py-24 border-b border-[var(--edge)] bg-[var(--bg)]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <!-- Section Header -->
+    <div class="flex items-center justify-between pb-6 border-b border-[var(--edge)] font-mono-code text-xs text-[var(--fg-muted)]">
+      <div class="flex items-center gap-2">
+        <span class="text-[var(--accent)] font-semibold">05 //</span>
+        <span class="uppercase tracking-wider font-semibold text-[var(--fg)]">EXPERIENCE & EDUCATION</span>
+      </div>
+      <span class="badge-mono">timeline</span>
+    </div>
+
+    <!-- Intro Headline -->
+    <div class="pt-8 pb-8">
+      <h2 class="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[var(--fg)] text-balance">
+        Experience & Education
+      </h2>
+      <p class="text-sm text-[var(--fg-muted)] mt-1.5 max-w-xl text-pretty leading-relaxed">
+        Roles, leadership responsibilities, and academic background.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+      <!-- Left Column: Professional Experience (Requirement 8) -->
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center justify-between pb-3 border-b border-[var(--edge)]">
+          <div class="font-mono-code text-xs font-semibold uppercase text-[var(--fg)] flex items-center gap-2">
+            <span class="text-[var(--accent)] font-bold">05.A //</span>
+            <span>Experience</span>
+          </div>
+          <span class="badge-mono">{experienceHistory.length} roles</span>
+        </div>
+
+        <div class="space-y-6">
+          {experienceHistory.map((exp) => (
+            <div class="corner-box p-6 space-y-4 hover:border-[var(--accent-border)] transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <div>
+                  <h3 class="text-base font-semibold text-[var(--fg)]">{exp.role}</h3>
+                  <div class="font-mono-code text-xs text-[var(--accent)] font-medium mt-0.5">{exp.company} • {exp.type}</div>
+                </div>
+                <div class="font-mono-code text-xs text-[var(--fg-muted)] shrink-0 sm:text-right">
+                  <span class="tabular-nums">{exp.period}</span>
+                  <div class="text-[11px] text-[var(--fg-faint)]">{exp.location}</div>
+                </div>
+              </div>
+
+              <p class="text-xs sm:text-sm text-[var(--fg-muted)] leading-relaxed text-pretty">
+                {exp.description}
+              </p>
+
+              <div class="space-y-1.5 pt-1">
+                <span class="text-[11px] font-mono-code text-[var(--fg-muted)] uppercase tracking-wider font-semibold">Key Responsibilities:</span>
+                <ul class="space-y-1.5 text-xs text-[var(--fg-muted)]">
+                  {exp.achievements.map((item) => (
+                    <li class="flex items-start gap-2">
+                      <span class="font-mono-code text-[var(--accent)] mt-0.5 font-bold">↳</span>
+                      <span class="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="flex flex-wrap gap-1.5 pt-2 border-t border-[var(--edge)]">
+                {exp.skills.map((skill) => (
+                  <span class="badge-mono text-[10px]">{skill}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right Column: Educational Qualification (Requirement 7) -->
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center justify-between pb-3 border-b border-[var(--edge)]">
+          <div class="font-mono-code text-xs font-semibold uppercase text-[var(--fg)] flex items-center gap-2">
+            <span class="text-[var(--accent)] font-bold">05.B //</span>
+            <span>Education</span>
+          </div>
+          <span class="badge-mono">{educationHistory.length} qualifications</span>
+        </div>
+
+        <div class="space-y-6">
+          {educationHistory.map((edu) => (
+            <div class="corner-box p-6 space-y-3 hover:border-[var(--accent-border)] transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <div>
+                  <h3 class="text-base font-semibold text-[var(--fg)]">{edu.degree}</h3>
+                  <div class="font-mono-code text-xs text-[var(--accent)] font-medium mt-0.5">
+                    {edu.institution} {edu.affiliation && `(${edu.affiliation})`}
+                  </div>
+                </div>
+                <div class="font-mono-code text-xs text-[var(--fg-muted)] shrink-0 sm:text-right">
+                  <span class="tabular-nums">{edu.period}</span>
+                  <div class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{edu.result}</div>
+                </div>
+              </div>
+
+              <div class="text-[11px] font-mono-code text-[var(--fg-muted)]">
+                Location: <span class="text-[var(--fg)]">{edu.location}</span>
+              </div>
+
+              <div class="space-y-1 pt-1">
+                <ul class="space-y-1.5 text-xs text-[var(--fg-muted)]">
+                  {edu.highlights.map((h) => (
+                    <li class="flex items-start gap-2">
+                      <span class="font-mono-code text-[var(--accent)] mt-0.5 font-bold">↳</span>
+                      <span class="leading-relaxed">{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
