@@ -31,15 +31,15 @@ When I started writing code in 2021, those two lessons stayed with me. Software 
 I believe a portfolio should not just show screenshots; it should show how a person thinks. Inside this site, you will find:
 
 ### 1. Selected Projects Built with Purpose
-* **[Luna](https://luna-chat-three.vercel.app/)** — *A quiet, zero-trace conversation space.*  
+* **[Luna](https://luna-ggwp.vercel.app/)** ([Source Code](https://github.com/srpranto/Luna)) — *A quiet, zero-trace conversation space.*  
   Built with Next.js, TypeScript, the Web Crypto API, and an in-browser SQLite engine (PGlite). Every message is encrypted directly inside the browser using cryptographic keys that never leave your device. When you close the browser tab, the database vanishes. No history, no server logs, no tracking. I built this because privacy should be simple, natural, and accessible to everyone.
-* **[Book Vibe](https://book-vibe-phi.vercel.app/)** — *A reading journal and discovery space.*  
+* **[Book Vibe](https://book-vibe-shahil.vercel.app/)** ([Source Code](https://github.com/srpranto/book-vibe)) — *A reading journal and discovery space.*  
   Connected to the Open Library database. It lets readers search millions of titles, organize books into personalized shelves, write reading notes, and keep track of their progress without ads or noisy social feeds.
-* **[Countries Explorer](https://countries-explorer-seven-tau.vercel.app/)** — *An interactive world atlas.*  
+* **[Countries Explorer](https://countriesexplorer-io.vercel.app/)** ([Source Code](https://github.com/srpranto/countries-explorer-react-app)) — *An interactive world atlas.*  
   A fast exploration tool covering 250+ nations. Built with instant debounced filtering, border-hopping navigation, and a wishlist planner that helps people learn about geography without waiting for slow pages to load.
-* **[Bazar Dor](https://bazar-dor.vercel.app/)** — *Daily commodity price tracker.*  
+* **[Bazar Dor](https://bazar-dor-io.vercel.app/)** ([Source Code](https://github.com/srpranto/bazar-dor)) — *Daily commodity price tracker.*  
   In Bangladesh, ordinary families check the daily prices of rice, oil, vegetables, and fish every morning. I built Bazar Dor with bilingual Bengali and English typography so families and small vendors can see daily price shifts and budget their weekly groceries clearly.
-* **[HateyHat](https://hateyhat-client.vercel.app/)** — *Local community commerce platform.*  
+* **[HateyHat](https://hateyhat-client.vercel.app/)** ([Source Code](https://github.com/srpranto/hateyhat-client)) — *Local community commerce platform.*  
   A lightweight platform designed to connect neighborhood buyers and local independent sellers directly, with clean product categorization and fast search.
 
 ### 2. A Honest Look at My Skills
@@ -87,8 +87,8 @@ Whether you have an open position on your team, a freelance project you would li
 * **Email**: [personalshahil69@gmail.com](mailto:personalshahil69@gmail.com)
 * **WhatsApp & Phone**: [+880 1303 723701](https://wa.me/8801303723701?text=Hi%20Shahil,%20I%20came%20across%20your%20portfolio!)
 * **LinkedIn**: [linkedin.com/in/mdshahil](https://linkedin.com/in/mdshahil)
-* **GitHub**: [github.com/sahilrahman69](https://github.com/sahilrahman69)
-* **Download Résumé**: [MD_Shahil_Resume.pdf](https://github.com/sahilrahman69/my-portfolio/raw/main/public/MD_Shahil_Resume.pdf)
+* **GitHub**: [github.com/srpranto](https://github.com/srpranto)
+* **Download Résumé**: [MD_Shahil_Resume.pdf](https://shahil-portfilio-dev.vercel.app/MD_Shahil_Resume.pdf)
 
 Thank you for your time and your kindness.
 
